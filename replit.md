@@ -6,6 +6,13 @@ This is a full-stack digital forensics and cybersecurity investigation platform 
 
 Preferred communication style: Simple, everyday language.
 
+## Recent Research Task (January 2025)
+User requested comprehensive analysis of high-quality datasets for DFF framework context, focusing on current global challenges including deepfake detection, cryptocurrency forensics, IoT security, and social media manipulation. Research completed covering:
+- NIST CFReDS datasets and current status
+- DFRWS challenge datasets through 2023
+- Modern threats: AI-generated content, blockchain forensics, IoT security
+- Current limitations and gaps in available datasets
+
 ## System Architecture
 
 The application follows a monorepo structure with a clear separation between client and server code:
