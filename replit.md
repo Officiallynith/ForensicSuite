@@ -6,6 +6,14 @@ This is a full-stack digital forensics and cybersecurity investigation platform 
 
 Preferred communication style: Simple, everyday language.
 
+## Academic Project Information
+
+**Student:** Nithin H K
+**Institution:** JSS Mahavidyapeetha, JSS Science and Technology University, Mysuru – 570 006
+**Department:** Computer Science
+**Guide:** Shwetha S, Assistant Professor, Department of Computer Science
+**Project:** DAFF: Digital Automation Forensic Framework
+
 ## Recent Research Task (January 2025)
 User requested comprehensive analysis of high-quality datasets for DFF framework context, focusing on current global challenges including deepfake detection, cryptocurrency forensics, IoT security, and social media manipulation. Research completed covering:
 - NIST CFReDS datasets and current status
