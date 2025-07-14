@@ -51,6 +51,8 @@ Key entities include:
 - **AI Analysis Jobs**: Background processing status
 - **Notifications**: User alert system
 
+**Recent Update (Jan 2025)**: Migrated from in-memory storage to PostgreSQL database using Drizzle ORM for persistent data storage and improved scalability.
+
 ## Data Flow
 
 1. **Evidence Upload**: Files uploaded through REST API with metadata extraction

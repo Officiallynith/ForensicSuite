@@ -32,17 +32,17 @@ export default function Dashboard() {
     refetchInterval: 30000, // Refresh every 30 seconds
   });
 
-  // WebSocket for real-time updates
-  const { lastMessage, isConnected } = useWebSocket();
+  // WebSocket for real-time updates (temporarily disabled to fix crashes)
+  // const { lastMessage, isConnected } = useWebSocket();
 
+  // Temporarily disabled WebSocket message handling to fix crashes
+  /*
   useEffect(() => {
     if (lastMessage) {
       switch (lastMessage.type) {
         case 'threats_updated':
-          // Refetch threat data
           refetch();
           break;
-          
         case 'case_created':
           toast({
             title: "New Case Created",
@@ -50,7 +50,6 @@ export default function Dashboard() {
           });
           refetch();
           break;
-          
         case 'evidence_analyzed':
           toast({
             title: "Evidence Analysis Complete",
@@ -58,16 +57,12 @@ export default function Dashboard() {
           });
           refetch();
           break;
-          
-        case 'ai_jobs_updated':
-          // AI jobs are handled by their own component
-          break;
-          
         default:
           break;
       }
     }
   }, [lastMessage, refetch, toast]);
+  */
 
   if (isLoading || !dashboardData) {
     return (

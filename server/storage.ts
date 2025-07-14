@@ -1,12 +1,7 @@
-import { 
-  users, cases, evidence, threats, aiAnalysisJobs, notifications,
-  type User, type InsertUser,
-  type Case, type InsertCase,
-  type Evidence, type InsertEvidence,
-  type Threat, type InsertThreat,
-  type AiAnalysisJob, type InsertAiAnalysisJob,
-  type Notification, type InsertNotification
-} from "@shared/schema";
+import { users, cases, evidence, threats, aiAnalysisJobs, notifications } from "@shared/schema";
+import type { User, InsertUser, Case, InsertCase, Evidence, InsertEvidence, Threat, InsertThreat, AiAnalysisJob, InsertAiAnalysisJob, Notification, InsertNotification } from "@shared/schema";
+import { db } from "./db";
+import { eq, and } from "drizzle-orm";
 
 export interface IStorage {
   // Users
@@ -47,339 +42,292 @@ export interface IStorage {
   markNotificationAsRead(id: number): Promise<void>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User> = new Map();
-  private cases: Map<number, Case> = new Map();
-  private evidence: Map<number, Evidence> = new Map();
-  private threats: Map<number, Threat> = new Map();
-  private aiAnalysisJobs: Map<number, AiAnalysisJob> = new Map();
-  private notifications: Map<number, Notification> = new Map();
-  
-  private currentUserId = 1;
-  private currentCaseId = 1;
-  private currentEvidenceId = 1;
-  private currentThreatId = 1;
-  private currentAiJobId = 1;
-  private currentNotificationId = 1;
+export class DatabaseStorage implements IStorage {
+  private initialized = false;
 
   constructor() {
-    this.initializeMockData();
+    this.initializeOnce();
   }
 
-  private initializeMockData() {
-    // Create default user
-    const defaultUser: User = {
-      id: 1,
-      username: "sarah.chen",
-      password: "hashed_password",
-      name: "Dr. Sarah Chen",
-      role: "Lead Forensic Analyst",
-      createdAt: new Date(),
-    };
-    this.users.set(1, defaultUser);
-    this.currentUserId = 2;
-
-    // Create sample cases
-    const cases: Case[] = [
-      {
-        id: 1,
-        name: "CyberAttack-2024-001",
-        description: "Advanced persistent threat targeting financial institutions using AI-powered social engineering",
-        priority: "critical",
-        status: "active",
-        assignedTo: "Dr. Sarah Chen",
-        progress: 67,
-        createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
-        lastActivity: new Date(Date.now() - 60 * 60 * 1000),
-      },
-      {
-        id: 2,
-        name: "Deepfake-Investigation-2024-007",
-        description: "Corporate espionage investigation involving deepfake technology for CEO impersonation",
-        priority: "high",
-        status: "active",
-        assignedTo: "Marcus Rodriguez",
-        progress: 43,
-        createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-        lastActivity: new Date(Date.now() - 3 * 60 * 60 * 1000),
-      },
-      {
-        id: 3,
-        name: "IoT-Botnet-Analysis-2024-012",
-        description: "Investigation of coordinated IoT device compromise affecting smart city infrastructure",
-        priority: "medium",
-        status: "active",
-        assignedTo: "Alex Kim",
-        progress: 82,
-        createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-        lastActivity: new Date(Date.now() - 24 * 60 * 60 * 1000),
+  private async initializeOnce() {
+    if (this.initialized) return;
+    
+    try {
+      // Check if we have data already
+      const existingUsers = await db.select().from(users).limit(1);
+      if (existingUsers.length > 0) {
+        this.initialized = true;
+        return;
       }
-    ];
-    cases.forEach(c => this.cases.set(c.id, c));
-    this.currentCaseId = 4;
 
-    // Create AI analysis jobs
-    const aiJobs: AiAnalysisJob[] = [
-      {
-        id: 1,
+      // Create sample data
+      const user = await db.insert(users).values({
+        username: "forensic_analyst",
+        password: "hashed_password",
+        name: "Dr. Sarah Chen",
+        email: "analyst@daff.security",
+        role: "Senior Forensic Analyst",
+      }).returning();
+
+      const case1 = await db.insert(cases).values({
+        name: "CyberAttack-2024-001",
+        description: "Advanced persistent threat investigation",
+        status: "active",
+        priority: "high",
+        assignedTo: "Dr. Sarah Chen",
+        progress: 65,
+      }).returning();
+
+      await db.insert(evidence).values({
+        caseId: case1[0].id,
+        filename: "suspicious_transaction.json",
+        fileType: "application/json",
+        size: 45678,
+        analysisStatus: "completed",
+        riskScore: 85,
+        aiAnalysisResults: { type: "crypto", confidence: 0.92 },
+      });
+
+      await db.insert(threats).values({
+        title: "AI-Generated Phishing Campaign Detected",
+        description: "Advanced threat detected",
+        severity: "high",
+        source: "AI Detection Engine",
+        confidence: 0.95,
+        threatType: "phishing",
+        isActive: true,
+        metadata: { indicators: ["IOC-001"] },
+      });
+
+      await db.insert(aiAnalysisJobs).values({
         jobType: "deepfake",
         status: "running",
-        progress: 94,
-        itemsTotal: 847,
-        itemsProcessed: 796,
-        results: null,
-        errorMessage: null,
-        createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        completedAt: null,
-      },
-      {
-        id: 2,
-        jobType: "social_media",
-        status: "running",
-        progress: 67,
-        itemsTotal: 23400,
-        itemsProcessed: 15678,
-        results: null,
-        errorMessage: null,
-        createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000),
-        completedAt: null,
-      },
-      {
-        id: 3,
-        jobType: "network",
-        status: "running",
-        progress: 82,
-        itemsTotal: 1200000,
-        itemsProcessed: 984000,
-        results: null,
-        errorMessage: null,
-        createdAt: new Date(Date.now() - 6 * 60 * 60 * 1000),
-        completedAt: null,
-      },
-      {
-        id: 4,
-        jobType: "crypto",
-        status: "running",
+        evidenceId: 1,
         progress: 45,
-        itemsTotal: 3700,
-        itemsProcessed: 1665,
-        results: null,
-        errorMessage: null,
-        createdAt: new Date(Date.now() - 30 * 60 * 1000),
-        completedAt: null,
-      }
-    ];
-    aiJobs.forEach(job => this.aiAnalysisJobs.set(job.id, job));
-    this.currentAiJobId = 5;
+      });
+
+      await db.insert(notifications).values({
+        userId: user[0].id,
+        title: "High-risk evidence detected",
+        message: "New evidence uploaded with risk score above 80%",
+        type: "alert",
+        isRead: false,
+      });
+
+      this.initialized = true;
+      console.log("Database initialized with sample data");
+    } catch (error) {
+      console.error("Database initialization error:", error);
+    }
   }
 
-  // Users
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    try {
+      const result = await db.select().from(users).where(eq(users.id, id));
+      return result[0] || undefined;
+    } catch (error) {
+      console.error("Get user error:", error);
+      return undefined;
+    }
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(user => user.username === username);
+    try {
+      const result = await db.select().from(users).where(eq(users.username, username));
+      return result[0] || undefined;
+    } catch (error) {
+      console.error("Get user by username error:", error);
+      return undefined;
+    }
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
-    const user: User = { 
-      ...insertUser, 
-      id,
-      role: insertUser.role || "analyst",
-      createdAt: new Date()
-    };
-    this.users.set(id, user);
-    return user;
+    const result = await db.insert(users).values(insertUser).returning();
+    return result[0];
   }
 
-  // Cases
   async getCases(): Promise<Case[]> {
-    return Array.from(this.cases.values());
+    try {
+      return await db.select().from(cases);
+    } catch (error) {
+      console.error("Get cases error:", error);
+      return [];
+    }
   }
 
   async getCase(id: number): Promise<Case | undefined> {
-    return this.cases.get(id);
+    try {
+      const result = await db.select().from(cases).where(eq(cases.id, id));
+      return result[0] || undefined;
+    } catch (error) {
+      console.error("Get case error:", error);
+      return undefined;
+    }
   }
 
   async getCasesByStatus(status: string): Promise<Case[]> {
-    return Array.from(this.cases.values()).filter(c => c.status === status);
+    try {
+      return await db.select().from(cases).where(eq(cases.status, status));
+    } catch (error) {
+      console.error("Get cases by status error:", error);
+      return [];
+    }
   }
 
   async createCase(caseData: InsertCase): Promise<Case> {
-    const id = this.currentCaseId++;
-    const newCase: Case = {
-      ...caseData,
-      id,
-      priority: caseData.priority || "medium",
-      status: caseData.status || "active",
-      progress: caseData.progress || 0,
-      createdAt: new Date(),
-      lastActivity: new Date(),
-    };
-    this.cases.set(id, newCase);
-    return newCase;
+    const result = await db.insert(cases).values(caseData).returning();
+    return result[0];
   }
 
   async updateCase(id: number, updates: Partial<Case>): Promise<Case | undefined> {
-    const existingCase = this.cases.get(id);
-    if (!existingCase) return undefined;
-    
-    const updatedCase = { ...existingCase, ...updates, lastActivity: new Date() };
-    this.cases.set(id, updatedCase);
-    return updatedCase;
+    try {
+      const result = await db.update(cases).set(updates).where(eq(cases.id, id)).returning();
+      return result[0] || undefined;
+    } catch (error) {
+      console.error("Update case error:", error);
+      return undefined;
+    }
   }
 
-  // Evidence
   async getEvidence(): Promise<Evidence[]> {
-    return Array.from(this.evidence.values());
+    try {
+      return await db.select().from(evidence);
+    } catch (error) {
+      console.error("Get evidence error:", error);
+      return [];
+    }
   }
 
   async getEvidenceByCase(caseId: number): Promise<Evidence[]> {
-    return Array.from(this.evidence.values()).filter(e => e.caseId === caseId);
+    try {
+      return await db.select().from(evidence).where(eq(evidence.caseId, caseId));
+    } catch (error) {
+      console.error("Get evidence by case error:", error);
+      return [];
+    }
   }
 
   async getRecentEvidence(limit: number = 10): Promise<Evidence[]> {
-    return Array.from(this.evidence.values())
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-      .slice(0, limit);
+    try {
+      return await db.select().from(evidence).limit(limit);
+    } catch (error) {
+      console.error("Get recent evidence error:", error);
+      return [];
+    }
   }
 
   async createEvidence(evidenceData: InsertEvidence): Promise<Evidence> {
-    const id = this.currentEvidenceId++;
-    const evidence: Evidence = {
-      ...evidenceData,
-      id,
-      originalPath: evidenceData.originalPath || null,
-      hash: evidenceData.hash || null,
-      caseId: evidenceData.caseId || null,
-      riskScore: evidenceData.riskScore || null,
-      analysisStatus: evidenceData.analysisStatus || "pending",
-      aiAnalysisResults: evidenceData.aiAnalysisResults || null,
-      createdAt: new Date(),
-      processedAt: null,
-    };
-    this.evidence.set(id, evidence);
-    return evidence;
+    const result = await db.insert(evidence).values(evidenceData).returning();
+    return result[0];
   }
 
   async updateEvidence(id: number, updates: Partial<Evidence>): Promise<Evidence | undefined> {
-    const existing = this.evidence.get(id);
-    if (!existing) return undefined;
-    
-    const updated = { ...existing, ...updates };
-    this.evidence.set(id, updated);
-    return updated;
+    try {
+      const result = await db.update(evidence).set(updates).where(eq(evidence.id, id)).returning();
+      return result[0] || undefined;
+    } catch (error) {
+      console.error("Update evidence error:", error);
+      return undefined;
+    }
   }
 
-  // Threats
   async getActiveThreats(): Promise<Threat[]> {
-    return Array.from(this.threats.values()).filter(t => t.isActive);
+    try {
+      return await db.select().from(threats).where(eq(threats.isActive, true));
+    } catch (error) {
+      console.error("Get active threats error:", error);
+      return [];
+    }
   }
 
   async getRecentThreats(limit: number = 10): Promise<Threat[]> {
-    return Array.from(this.threats.values())
-      .filter(t => t.isActive)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-      .slice(0, limit);
+    try {
+      return await db.select().from(threats).limit(limit);
+    } catch (error) {
+      console.error("Get recent threats error:", error);
+      return [];
+    }
   }
 
   async createThreat(threat: InsertThreat): Promise<Threat> {
-    const id = this.currentThreatId++;
-    const newThreat: Threat = {
-      ...threat,
-      id,
-      isActive: threat.isActive !== undefined ? threat.isActive : true,
-      metadata: threat.metadata || {},
-      createdAt: new Date(),
-    };
-    this.threats.set(id, newThreat);
-    return newThreat;
+    const result = await db.insert(threats).values(threat).returning();
+    return result[0];
   }
 
   async updateThreat(id: number, updates: Partial<Threat>): Promise<Threat | undefined> {
-    const existing = this.threats.get(id);
-    if (!existing) return undefined;
-    
-    const updated = { ...existing, ...updates };
-    this.threats.set(id, updated);
-    return updated;
+    try {
+      const result = await db.update(threats).set(updates).where(eq(threats.id, id)).returning();
+      return result[0] || undefined;
+    } catch (error) {
+      console.error("Update threat error:", error);
+      return undefined;
+    }
   }
 
-  // AI Analysis Jobs
   async getAiAnalysisJobs(): Promise<AiAnalysisJob[]> {
-    return Array.from(this.aiAnalysisJobs.values());
+    try {
+      return await db.select().from(aiAnalysisJobs);
+    } catch (error) {
+      console.error("Get AI jobs error:", error);
+      return [];
+    }
   }
 
   async getActiveAiJobs(): Promise<AiAnalysisJob[]> {
-    return Array.from(this.aiAnalysisJobs.values())
-      .filter(job => job.status === "running" || job.status === "queued");
+    try {
+      return await db.select().from(aiAnalysisJobs).where(eq(aiAnalysisJobs.status, "running"));
+    } catch (error) {
+      console.error("Get active AI jobs error:", error);
+      return [];
+    }
   }
 
   async createAiAnalysisJob(job: InsertAiAnalysisJob): Promise<AiAnalysisJob> {
-    const id = this.currentAiJobId++;
-    const newJob: AiAnalysisJob = {
-      ...job,
-      id,
-      status: job.status || "queued",
-      progress: job.progress || 0,
-      itemsTotal: job.itemsTotal || 0,
-      itemsProcessed: job.itemsProcessed || 0,
-      results: job.results || null,
-      errorMessage: job.errorMessage || null,
-      createdAt: new Date(),
-      completedAt: null,
-    };
-    this.aiAnalysisJobs.set(id, newJob);
-    return newJob;
+    const result = await db.insert(aiAnalysisJobs).values(job).returning();
+    return result[0];
   }
 
   async updateAiAnalysisJob(id: number, updates: Partial<AiAnalysisJob>): Promise<AiAnalysisJob | undefined> {
-    const existing = this.aiAnalysisJobs.get(id);
-    if (!existing) return undefined;
-    
-    const updated = { ...existing, ...updates };
-    if (updates.status === "completed" || updates.status === "failed") {
-      updated.completedAt = new Date();
+    try {
+      const result = await db.update(aiAnalysisJobs).set(updates).where(eq(aiAnalysisJobs.id, id)).returning();
+      return result[0] || undefined;
+    } catch (error) {
+      console.error("Update AI job error:", error);
+      return undefined;
     }
-    this.aiAnalysisJobs.set(id, updated);
-    return updated;
   }
 
-  // Notifications
   async getNotificationsByUser(userId: number): Promise<Notification[]> {
-    return Array.from(this.notifications.values())
-      .filter(n => n.userId === userId)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    try {
+      return await db.select().from(notifications).where(eq(notifications.userId, userId));
+    } catch (error) {
+      console.error("Get notifications error:", error);
+      return [];
+    }
   }
 
   async getUnreadNotifications(userId: number): Promise<Notification[]> {
-    return Array.from(this.notifications.values())
-      .filter(n => n.userId === userId && !n.isRead);
+    try {
+      return await db.select().from(notifications)
+        .where(and(eq(notifications.userId, userId), eq(notifications.isRead, false)));
+    } catch (error) {
+      console.error("Get unread notifications error:", error);
+      return [];
+    }
   }
 
   async createNotification(notification: InsertNotification): Promise<Notification> {
-    const id = this.currentNotificationId++;
-    const newNotification: Notification = {
-      ...notification,
-      id,
-      type: notification.type || "info",
-      userId: notification.userId || null,
-      isRead: notification.isRead !== undefined ? notification.isRead : false,
-      createdAt: new Date(),
-    };
-    this.notifications.set(id, newNotification);
-    return newNotification;
+    const result = await db.insert(notifications).values(notification).returning();
+    return result[0];
   }
 
   async markNotificationAsRead(id: number): Promise<void> {
-    const notification = this.notifications.get(id);
-    if (notification) {
-      notification.isRead = true;
-      this.notifications.set(id, notification);
+    try {
+      await db.update(notifications).set({ isRead: true }).where(eq(notifications.id, id));
+    } catch (error) {
+      console.error("Mark notification read error:", error);
     }
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
