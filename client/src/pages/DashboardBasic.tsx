@@ -68,13 +68,21 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <a 
             href="/anomaly-detection" 
             className="block bg-blue-600 hover:bg-blue-700 p-6 rounded-lg text-center transition-colors"
           >
             <h3 className="text-xl font-semibold mb-2">🧠 Anomaly Detection</h3>
             <p className="text-blue-100">AI-powered current world threat analysis</p>
+          </a>
+
+          <a 
+            href="/automated-analysis" 
+            className="block bg-green-600 hover:bg-green-700 p-6 rounded-lg text-center transition-colors"
+          >
+            <h3 className="text-xl font-semibold mb-2">🤖 Automated Analysis</h3>
+            <p className="text-green-100">Self-sufficient flagging system (+/-/=)</p>
           </a>
 
           <div className="bg-gray-800 p-6 rounded-lg text-center">

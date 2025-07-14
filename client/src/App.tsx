@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Dashboard from "@/pages/DashboardBasic";
 import AnomalyDetection from "@/pages/AnomalyDetection";
+import AutomatedAnalysis from "@/pages/AutomatedAnalysis";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -13,6 +14,7 @@ function Router() {
       <Route path="/" component={Dashboard} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/anomaly-detection" component={AnomalyDetection} />
+      <Route path="/automated-analysis" component={AutomatedAnalysis} />
       <Route path="/ai-analysis" component={AnomalyDetection} />
       <Route path="/deepfake" component={AnomalyDetection} />
       <Route path="/crypto" component={AnomalyDetection} />

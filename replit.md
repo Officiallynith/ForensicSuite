@@ -61,6 +61,13 @@ Key entities include:
 
 **Recent Update (Jan 2025)**: Migrated from in-memory storage to PostgreSQL database using Drizzle ORM for persistent data storage and improved scalability.
 
+**Latest Addition (Jan 2025)**: Implemented automated DAFF analysis system with intelligent flagging capabilities:
+- **Positive (+)**: Legitimate/safe content detection
+- **Negative (-)**: Confirmed threat identification  
+- **Suspicious (=)**: Content requiring further investigation
+- Self-sufficient processing with minimal human oversight
+- Real-time and batch analysis capabilities
+
 ## Data Flow
 
 1. **Evidence Upload**: Files uploaded through REST API with metadata extraction

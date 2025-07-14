@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { aiAnalysisService } from "./services/aiAnalysis";
+import { automatedAnalysis } from "./services/automatedAnalysis";
 import { threatIntelligenceService } from "./services/threatIntelligence";
 import { insertCaseSchema, insertEvidenceSchema, insertNotificationSchema } from "@shared/schema";
 import multer from "multer";
@@ -254,6 +255,94 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       res.json({ result });
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  // Automated DAFF Analysis endpoints
+  app.post("/api/auto-analysis", async (req, res) => {
+    try {
+      const { type, data, metadata } = req.body;
+      
+      if (!type || !data) {
+        return res.status(400).json({ error: "Type and data are required" });
+      }
+
+      const result = await automatedAnalysis.analyzeAutomatically({
+        type,
+        data,
+        metadata
+      });
+
+      // Log results for monitoring
+      console.log(`[DAFF-AUTO] Analysis result: ${result.flag} (${result.confidence})`);
+
+      // Broadcast real-time results
+      broadcast({
+        type: 'auto_analysis_complete',
+        data: result
+      });
+
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  app.post("/api/auto-analysis/batch", async (req, res) => {
+    try {
+      const { inputs } = req.body;
+      
+      if (!inputs || !Array.isArray(inputs)) {
+        return res.status(400).json({ error: "Inputs array is required" });
+      }
+
+      const results = await automatedAnalysis.processBatch(inputs);
+
+      // Generate summary statistics
+      const summary = {
+        total: results.length,
+        positive: results.filter(r => r.flag === '+').length,
+        negative: results.filter(r => r.flag === '-').length,
+        suspicious: results.filter(r => r.flag === '=').length,
+        averageConfidence: results.reduce((sum, r) => sum + r.confidence, 0) / results.length,
+        processingTime: results.reduce((sum, r) => sum + r.processingTime, 0)
+      };
+
+      broadcast({
+        type: 'batch_analysis_complete',
+        data: { results, summary }
+      });
+
+      res.json({ results, summary });
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  app.get("/api/auto-analysis/status", async (req, res) => {
+    try {
+      // Return current system status and monitoring statistics
+      const status = {
+        system: 'operational',
+        timestamp: new Date().toISOString(),
+        monitoring: 'active',
+        capabilities: [
+          'file_analysis',
+          'text_analysis', 
+          'network_analysis',
+          'transaction_analysis',
+          'media_analysis'
+        ],
+        flags: {
+          positive: 'Legitimate/Safe content (+)',
+          negative: 'Confirmed threats (-)',
+          suspicious: 'Requires investigation (=)'
+        }
+      };
+
+      res.json(status);
     } catch (error) {
       res.status(500).json({ error: error instanceof Error ? error.message : "Unknown error" });
     }
