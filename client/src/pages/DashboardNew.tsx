@@ -149,28 +149,28 @@ export default function DashboardNew() {
         </div>
 
         {/* Main Feature Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
           <a 
             href="/anomaly-detection" 
-            className="group block bg-gradient-to-br from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 p-8 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
+            className="group block bg-gradient-to-br from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
           >
             <div className="text-center">
-              <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">🧠</div>
-              <h3 className="text-2xl font-bold mb-3">Anomaly Detection</h3>
-              <p className="text-blue-100 leading-relaxed">
-                AI-powered current world threat analysis with real-time monitoring capabilities
+              <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">🧠</div>
+              <h3 className="text-xl font-bold mb-3">Anomaly Detection</h3>
+              <p className="text-blue-100 leading-relaxed text-sm">
+                AI-powered current world threat analysis with real-time monitoring
               </p>
             </div>
           </a>
 
           <a 
             href="/automated-analysis" 
-            className="group block bg-gradient-to-br from-green-600 to-green-800 hover:from-green-500 hover:to-green-700 p-8 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
+            className="group block bg-gradient-to-br from-green-600 to-green-800 hover:from-green-500 hover:to-green-700 p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
           >
             <div className="text-center">
-              <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">🤖</div>
-              <h3 className="text-2xl font-bold mb-3">Automated Analysis</h3>
-              <p className="text-green-100 leading-relaxed">
+              <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">🤖</div>
+              <h3 className="text-xl font-bold mb-3">Automated Analysis</h3>
+              <p className="text-green-100 leading-relaxed text-sm">
                 Self-sufficient flagging system with positive, negative, and suspicious classification
               </p>
             </div>
@@ -178,13 +178,26 @@ export default function DashboardNew() {
 
           <a 
             href="/reports" 
-            className="group block bg-gradient-to-br from-purple-600 to-purple-800 hover:from-purple-500 hover:to-purple-700 p-8 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
+            className="group block bg-gradient-to-br from-purple-600 to-purple-800 hover:from-purple-500 hover:to-purple-700 p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
           >
             <div className="text-center">
-              <div className="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">📄</div>
-              <h3 className="text-2xl font-bold mb-3">Forensic Reports</h3>
-              <p className="text-purple-100 leading-relaxed">
-                AI-powered comprehensive report generation with detailed analysis and insights
+              <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">📄</div>
+              <h3 className="text-xl font-bold mb-3">Forensic Reports</h3>
+              <p className="text-purple-100 leading-relaxed text-sm">
+                AI-powered comprehensive report generation with detailed analysis
+              </p>
+            </div>
+          </a>
+
+          <a 
+            href="/network-storage-automation" 
+            className="group block bg-gradient-to-br from-orange-600 to-orange-800 hover:from-orange-500 hover:to-orange-700 p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
+          >
+            <div className="text-center">
+              <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">⚙️</div>
+              <h3 className="text-xl font-bold mb-3">Network & Storage Automation</h3>
+              <p className="text-orange-100 leading-relaxed text-sm">
+                Comprehensive automation for seamless network and storage analysis
               </p>
             </div>
           </a>

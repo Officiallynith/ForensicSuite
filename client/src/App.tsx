@@ -9,6 +9,7 @@ import AutomatedAnalysis from "@/pages/AutomatedAnalysis";
 import DFFDocumentation from "@/pages/DFFDocumentation";
 import EnhancementPlan from "@/pages/EnhancementPlan";
 import ForensicReports from "@/pages/ForensicReports";
+import NetworkStorageAutomation from "@/pages/NetworkStorageAutomation";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -33,6 +34,7 @@ function Router() {
       <Route path="/cases" component={() => <div className="p-8 text-white">Case Management module coming soon...</div>} />
       <Route path="/analytics" component={() => <div className="p-8 text-white">Analytics module coming soon...</div>} />
       <Route path="/reports" component={ForensicReports} />
+      <Route path="/network-storage-automation" component={NetworkStorageAutomation} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>
