@@ -90,6 +90,14 @@ Key entities include:
 - Automated installation scripts with dependency management
 - Package distribution via npm, Docker Hub, and GitHub Releases
 
+**UI/UX Dashboard Redesign (Jan 2025)**: Created multiple dashboard layout options for optimal user experience:
+- **Separated Layout**: Introduction section visually distinct from main dashboard functionality
+- **Tabbed Interface**: Seamless switching between academic introduction and system dashboard
+- **Two-Column Layout**: Side-by-side presentation with introduction in left column, dashboard in right
+- **Gradient Design**: Modern glassmorphism effects with improved visual hierarchy
+- **Responsive Design**: Mobile-first approach with consistent spacing and typography
+- **Accessibility**: High contrast colors, proper focus states, and screen reader compatibility
+
 ## Data Flow
 
 1. **Evidence Upload**: Files uploaded through REST API with metadata extraction
