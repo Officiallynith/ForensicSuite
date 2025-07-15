@@ -91,7 +91,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-gray-800 p-6 rounded-lg">
+        <div className="bg-gray-800 p-6 rounded-lg mb-8">
           <h2 className="text-2xl font-semibold mb-4">DAFF Features</h2>
           <ul className="space-y-2">
             <li className="flex items-center space-x-2">
@@ -123,6 +123,21 @@ export default function Dashboard() {
               <span>Real-time Threat Intelligence</span>
             </li>
           </ul>
+        </div>
+
+        {/* Academic Documentation */}
+        <div className="bg-blue-50 text-blue-900 p-6 rounded-lg">
+          <h2 className="text-2xl font-semibold mb-4">Academic Documentation</h2>
+          <p className="mb-4">
+            Comprehensive research documentation covering the Development Framework Framework (DFF) 
+            methodology, project goals, and implementation strategies.
+          </p>
+          <a 
+            href="/dff-documentation" 
+            className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+          >
+            View DFF Documentation
+          </a>
         </div>
       </div>
     </div>
