@@ -126,18 +126,34 @@ export default function Dashboard() {
         </div>
 
         {/* Academic Documentation */}
-        <div className="bg-blue-50 text-blue-900 p-6 rounded-lg">
-          <h2 className="text-2xl font-semibold mb-4">Academic Documentation</h2>
-          <p className="mb-4">
-            Comprehensive research documentation covering the Development Framework Framework (DFF) 
-            methodology, project goals, and implementation strategies.
-          </p>
-          <a 
-            href="/dff-documentation" 
-            className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
-          >
-            View DFF Documentation
-          </a>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-blue-50 text-blue-900 p-6 rounded-lg">
+            <h2 className="text-xl font-semibold mb-3">Academic Documentation</h2>
+            <p className="mb-4 text-sm">
+              Comprehensive research documentation covering the Development Framework Framework (DFF) 
+              methodology, project goals, and implementation strategies.
+            </p>
+            <a 
+              href="/dff-documentation" 
+              className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-medium transition-colors text-sm"
+            >
+              View DFF Documentation
+            </a>
+          </div>
+
+          <div className="bg-purple-50 text-purple-900 p-6 rounded-lg">
+            <h2 className="text-xl font-semibold mb-3">Enhancement Plan</h2>
+            <p className="mb-4 text-sm">
+              Technical implementation guide for expanding DAFF functionality to include 
+              storage management and network operations with scalability optimization.
+            </p>
+            <a 
+              href="/enhancement-plan" 
+              className="inline-block bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded font-medium transition-colors text-sm"
+            >
+              View Enhancement Plan
+            </a>
+          </div>
         </div>
       </div>
     </div>

@@ -7,6 +7,7 @@ import Dashboard from "@/pages/DashboardBasic";
 import AnomalyDetection from "@/pages/AnomalyDetection";
 import AutomatedAnalysis from "@/pages/AutomatedAnalysis";
 import DFFDocumentation from "@/pages/DFFDocumentation";
+import EnhancementPlan from "@/pages/EnhancementPlan";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -17,6 +18,7 @@ function Router() {
       <Route path="/anomaly-detection" component={AnomalyDetection} />
       <Route path="/automated-analysis" component={AutomatedAnalysis} />
       <Route path="/dff-documentation" component={DFFDocumentation} />
+      <Route path="/enhancement-plan" component={EnhancementPlan} />
       <Route path="/ai-analysis" component={AnomalyDetection} />
       <Route path="/deepfake" component={AnomalyDetection} />
       <Route path="/crypto" component={AnomalyDetection} />
