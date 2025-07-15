@@ -10,6 +10,7 @@ import DFFDocumentation from "@/pages/DFFDocumentation";
 import EnhancementPlan from "@/pages/EnhancementPlan";
 import ForensicReports from "@/pages/ForensicReports";
 import NetworkStorageAutomation from "@/pages/NetworkStorageAutomation";
+import DAFFvsDFFComparison from "@/pages/DAFFvsDFFComparison";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -35,6 +36,7 @@ function Router() {
       <Route path="/analytics" component={() => <div className="p-8 text-white">Analytics module coming soon...</div>} />
       <Route path="/reports" component={ForensicReports} />
       <Route path="/network-storage-automation" component={NetworkStorageAutomation} />
+      <Route path="/daff-vs-dff" component={DAFFvsDFFComparison} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>

@@ -262,6 +262,19 @@ export default function DashboardNew() {
                     View Enhancement Plan
                   </a>
                 </div>
+
+                <div className="bg-green-500/10 p-4 rounded-lg border border-green-400/30">
+                  <h4 className="text-lg font-semibold text-green-300 mb-2">DAFF vs Traditional DFF</h4>
+                  <p className="text-sm text-gray-300 mb-3">
+                    Comprehensive comparison showcasing improvements and innovations over traditional frameworks.
+                  </p>
+                  <a 
+                    href="/daff-vs-dff" 
+                    className="inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
+                  >
+                    View Comparison
+                  </a>
+                </div>
               </div>
             </CardContent>
           </Card>
