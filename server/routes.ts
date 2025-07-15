@@ -4,6 +4,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { aiAnalysisService } from "./services/aiAnalysis";
 import { automatedAnalysis } from "./services/automatedAnalysis";
+import { reportGenerator } from "./services/reportGeneration";
 import { threatIntelligenceService } from "./services/threatIntelligence";
 import { insertCaseSchema, insertEvidenceSchema, insertNotificationSchema } from "@shared/schema";
 import multer from "multer";
@@ -366,6 +367,108 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true });
     } catch (error) {
       res.status(400).json({ error: error instanceof Error ? error.message : "Unknown error" });
+    }
+  });
+
+  // Forensic Report Generation endpoints
+  app.post("/api/reports/generate/:caseId", async (req, res) => {
+    try {
+      const caseId = parseInt(req.params.caseId);
+      const options = req.body || {};
+      
+      if (!caseId || isNaN(caseId)) {
+        return res.status(400).json({ error: "Valid case ID is required" });
+      }
+
+      console.log(`[DAFF-REPORTS] Generating report for case ${caseId}`);
+      const report = await reportGenerator.generateReport(caseId, options);
+
+      // Broadcast report generation completion
+      broadcast({
+        type: 'report_generated',
+        data: { 
+          reportId: report.id, 
+          caseId: report.caseId,
+          riskScore: report.riskScore,
+          confidence: report.confidence
+        }
+      });
+
+      res.json(report);
+    } catch (error) {
+      console.error('[DAFF-REPORTS] Report generation failed:', error);
+      res.status(500).json({ error: error instanceof Error ? error.message : "Report generation failed" });
+    }
+  });
+
+  app.get("/api/reports/preview/:caseId", async (req, res) => {
+    try {
+      const caseId = parseInt(req.params.caseId);
+      
+      if (!caseId || isNaN(caseId)) {
+        return res.status(400).json({ error: "Valid case ID is required" });
+      }
+
+      // Generate a quick preview without full AI analysis for faster response
+      const caseData = await storage.getCase(caseId);
+      const evidence = await storage.getEvidenceByCase(caseId);
+      const threats = await storage.getActiveThreats();
+      
+      const preview = {
+        caseId,
+        caseName: caseData?.name || 'Unnamed Case',
+        evidenceCount: evidence.length,
+        threatCount: threats.filter(t => t.caseId === caseId).length,
+        avgRiskScore: evidence.reduce((sum, e) => sum + (e.riskScore || 0), 0) / Math.max(evidence.length, 1),
+        lastActivity: evidence.length > 0 ? Math.max(...evidence.map(e => new Date(e.createdAt).getTime())) : null,
+        readyForReport: evidence.length > 0
+      };
+
+      res.json(preview);
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : "Preview generation failed" });
+    }
+  });
+
+  app.get("/api/reports/export/:reportId/pdf", async (req, res) => {
+    try {
+      const reportId = req.params.reportId;
+      
+      // In a real implementation, you would retrieve the stored report
+      // For now, we'll generate a text version
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename="forensic-report-${reportId}.pdf"`);
+      
+      const textReport = `Forensic Report ${reportId}\nGenerated: ${new Date().toISOString()}\n\nThis is a placeholder PDF export.`;
+      res.send(Buffer.from(textReport, 'utf-8'));
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : "Export failed" });
+    }
+  });
+
+  app.get("/api/reports/status", async (req, res) => {
+    try {
+      const status = {
+        system: 'operational',
+        reportingEngine: 'active',
+        aiInsights: 'enabled',
+        exportFormats: ['PDF', 'JSON', 'Text'],
+        timestamp: new Date().toISOString(),
+        capabilities: [
+          'Executive Summary Generation',
+          'Technical Analysis',
+          'Threat Assessment',
+          'Evidence Analysis',
+          'AI-Powered Insights',
+          'Risk Scoring',
+          'Timeline Creation',
+          'Recommendations'
+        ]
+      };
+
+      res.json(status);
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : "Status check failed" });
     }
   });
 

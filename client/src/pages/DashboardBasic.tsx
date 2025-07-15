@@ -85,10 +85,13 @@ export default function Dashboard() {
             <p className="text-green-100">Self-sufficient flagging system (+/-/=)</p>
           </a>
 
-          <div className="bg-gray-800 p-6 rounded-lg text-center">
-            <h3 className="text-xl font-semibold mb-2">📊 Case Management</h3>
-            <p className="text-gray-300">Investigation tracking and evidence management</p>
-          </div>
+          <a 
+            href="/reports" 
+            className="block bg-purple-600 hover:bg-purple-700 p-6 rounded-lg text-center transition-colors"
+          >
+            <h3 className="text-xl font-semibold mb-2">📄 Forensic Reports</h3>
+            <p className="text-purple-100">AI-powered comprehensive report generation</p>
+          </a>
         </div>
 
         <div className="bg-gray-800 p-6 rounded-lg mb-8">

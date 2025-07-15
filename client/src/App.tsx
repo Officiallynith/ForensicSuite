@@ -8,6 +8,7 @@ import AnomalyDetection from "@/pages/AnomalyDetection";
 import AutomatedAnalysis from "@/pages/AutomatedAnalysis";
 import DFFDocumentation from "@/pages/DFFDocumentation";
 import EnhancementPlan from "@/pages/EnhancementPlan";
+import ForensicReports from "@/pages/ForensicReports";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -31,7 +32,7 @@ function Router() {
       <Route path="/upload" component={() => <div className="p-8 text-white">Upload Evidence module coming soon...</div>} />
       <Route path="/cases" component={() => <div className="p-8 text-white">Case Management module coming soon...</div>} />
       <Route path="/analytics" component={() => <div className="p-8 text-white">Analytics module coming soon...</div>} />
-      <Route path="/reports" component={() => <div className="p-8 text-white">Generate Report module coming soon...</div>} />
+      <Route path="/reports" component={ForensicReports} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>

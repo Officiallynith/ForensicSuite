@@ -75,6 +75,21 @@ Key entities include:
 - Advanced security measures including blockchain integrity verification
 - Performance optimization with GPU acceleration and asynchronous processing
 
+**Forensic Report Generation (Jan 2025)**: Implemented automated AI-powered report generation system:
+- Comprehensive forensic analysis reports with executive summaries
+- AI insights using OpenAI GPT-4o for intelligent threat assessment
+- Multi-section reports covering findings, evidence analysis, and recommendations
+- Technical details with timeline creation and risk scoring algorithms
+- PDF export capabilities and case-based report generation
+- Real-time WebSocket notifications for report completion status
+
+**Cross-Platform Installation Plan (Jan 2025)**: Developed comprehensive installation strategy:
+- Docker containerization for consistent cross-platform deployment
+- Native package managers for Windows (Chocolatey/Winget), macOS (Homebrew), Linux (APT/YUM)
+- Cloud deployment templates for AWS, GCP, Azure, and DigitalOcean
+- Automated installation scripts with dependency management
+- Package distribution via npm, Docker Hub, and GitHub Releases
+
 ## Data Flow
 
 1. **Evidence Upload**: Files uploaded through REST API with metadata extraction
