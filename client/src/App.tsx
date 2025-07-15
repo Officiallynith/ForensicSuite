@@ -11,6 +11,7 @@ import EnhancementPlan from "@/pages/EnhancementPlan";
 import ForensicReports from "@/pages/ForensicReports";
 import NetworkStorageAutomation from "@/pages/NetworkStorageAutomation";
 import DAFFvsDFFComparison from "@/pages/DAFFvsDFFComparison";
+import DefenderSystem from "@/pages/DefenderSystem";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -37,6 +38,7 @@ function Router() {
       <Route path="/reports" component={ForensicReports} />
       <Route path="/network-storage-automation" component={NetworkStorageAutomation} />
       <Route path="/daff-vs-dff" component={DAFFvsDFFComparison} />
+      <Route path="/defender" component={DefenderSystem} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>

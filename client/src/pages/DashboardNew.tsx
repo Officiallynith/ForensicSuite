@@ -203,6 +203,48 @@ export default function DashboardNew() {
           </a>
         </div>
 
+        {/* Security Features */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          <a 
+            href="/defender" 
+            className="group block bg-gradient-to-br from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
+          >
+            <div className="text-center">
+              <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">🛡️</div>
+              <h3 className="text-xl font-bold mb-3">Security Defender</h3>
+              <p className="text-red-100 leading-relaxed text-sm">
+                Real-time threat detection and proactive system protection similar to Microsoft Defender
+              </p>
+            </div>
+          </a>
+
+          <a 
+            href="/daff-vs-dff" 
+            className="group block bg-gradient-to-br from-cyan-600 to-cyan-800 hover:from-cyan-500 hover:to-cyan-700 p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
+          >
+            <div className="text-center">
+              <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">📊</div>
+              <h3 className="text-xl font-bold mb-3">DAFF vs DFF Comparison</h3>
+              <p className="text-cyan-100 leading-relaxed text-sm">
+                Comprehensive comparison showing revolutionary improvements over traditional frameworks
+              </p>
+            </div>
+          </a>
+
+          <a 
+            href="/dff-documentation" 
+            className="group block bg-gradient-to-br from-indigo-600 to-indigo-800 hover:from-indigo-500 hover:to-indigo-700 p-6 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
+          >
+            <div className="text-center">
+              <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">📚</div>
+              <h3 className="text-xl font-bold mb-3">Academic Research</h3>
+              <p className="text-indigo-100 leading-relaxed text-sm">
+                Comprehensive documentation and research materials for academic purposes
+              </p>
+            </div>
+          </a>
+        </div>
+
         <Separator className="bg-gray-700 my-12" />
 
         {/* DAFF Features Overview */}
