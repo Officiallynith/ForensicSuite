@@ -10,8 +10,8 @@ Preferred communication style: Simple, everyday language.
 
 **Student:** Nithin H K
 **Institution:** JSS Mahavidyapeetha, JSS Science and Technology University, Mysuru – 570 006
-**Department:** Computer Science
-**Guide:** Shwetha S, Assistant Professor, Department of Computer Science
+**Department:** Computer Science and Engineering
+**Guide:** Shwetha S, Assistant Professor, Department of Computer Science and Engineering
 **Project:** DAFF: Digital Automation Forensic Framework
 
 ## Recent Research Task (January 2025)

@@ -77,7 +77,7 @@ export default function Introduction() {
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-300 font-medium">Department:</span>
-                      <span className="text-white">Computer Science</span>
+                      <span className="text-white">Computer Science and Engineering</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-300 font-medium">Project:</span>
@@ -133,11 +133,7 @@ export default function Introduction() {
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-gray-300 font-medium">Department:</span>
-                      <span className="text-white">Computer Science</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-300 font-medium">Specialization:</span>
-                      <span className="text-white">Digital Forensics</span>
+                      <span className="text-white">Computer Science and Engineering</span>
                     </div>
                   </div>
                 </div>

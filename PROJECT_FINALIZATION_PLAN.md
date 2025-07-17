@@ -5,6 +5,7 @@
 **Institution:** JSS Science and Technology University, Mysuru  
 **Student:** Nithin H K  
 **Guide:** Shwetha S, Assistant Professor  
+**Department:** Computer Science and Engineering  
 
 ---
 

@@ -9,9 +9,8 @@
 **Student:** Nithin H K  
 **Institution:** JSS Mahavidyapeetha, JSS Science and Technology University  
 **Location:** Mysuru – 570 006, Karnataka, India  
-**Department:** Computer Science  
+**Department:** Computer Science and Engineering  
 **Project Guide:** Shwetha S, Assistant Professor  
-**Specialization:** Digital Forensics and Cybersecurity  
 
 ## Project Overview
 
@@ -307,7 +306,7 @@ Ensure the following environment variables are configured for production:
 
 ### Academic Support
 - **Guide**: Shwetha S, Assistant Professor
-- **Department**: Computer Science, JSS Science and Technology University
+- **Department**: Computer Science and Engineering, JSS Science and Technology University
 - **Email**: [Contact through official university channels]
 
 ### Technical Support

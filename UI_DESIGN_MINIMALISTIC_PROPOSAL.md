@@ -515,6 +515,6 @@ The comprehensive testing plan and success metrics ensure that the redesign will
 ---
 
 **Document Prepared by:** DAFF Development Team  
-**Academic Supervision:** Shwetha S, Assistant Professor, JSS Science and Technology University  
+**Academic Supervision:** Shwetha S, Assistant Professor, Department of Computer Science and Engineering, JSS Science and Technology University  
 **Next Review Date:** 30 days post-implementation  
 **Version Control:** v1.0 - Initial proposal
