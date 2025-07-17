@@ -46,8 +46,7 @@ export default function Introduction() {
             </Button>
             <Button 
               onClick={() => setLocation('/academic')}
-              variant="outline"
-              className="border-gray-400 text-gray-200 hover:bg-gray-800 px-8 py-4 text-lg flex items-center space-x-2"
+              className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 text-lg flex items-center space-x-2"
             >
               <BookOpen className="w-6 h-6" />
               <span>Academic Dashboard</span>
