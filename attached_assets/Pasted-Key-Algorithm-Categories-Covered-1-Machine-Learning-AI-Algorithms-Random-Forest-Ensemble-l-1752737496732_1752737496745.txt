@@ -1,0 +1,40 @@
+Key Algorithm Categories Covered:
+1. Machine Learning & AI Algorithms:
+
+Random Forest: Ensemble learning for malware classification and network intrusion detection
+Isolation Forest: Unsupervised anomaly detection for zero-day threats
+LSTM Networks: Sequential pattern analysis for log analysis and timeline reconstruction
+Support Vector Machines: Binary classification for malware detection and text analysis
+2. Cryptographic & Hash Algorithms:
+
+SHA-256: Current gold standard for evidence integrity verification
+RSA Algorithm: Asymmetric encryption for secure communications and digital signatures
+AES: Symmetric encryption for protecting stored evidence and secure communications
+3. Network Analysis Algorithms:
+
+Deep Packet Inspection: Application layer content analysis for malware detection
+Network Flow Analysis: Metadata analysis for botnet detection and data exfiltration
+Behavioral Analysis: Baseline establishment for insider threat and APT detection
+4. Anomaly Detection Algorithms:
+
+One-Class SVM: Novelty detection for unknown threats
+Local Outlier Factor: Density-based anomaly detection for fraud detection
+Autoencoder-based Detection: Neural network approach for complex pattern recognition
+5. Emerging Technologies:
+
+Quantum-Enhanced ML: Future quantum computing applications in cybersecurity
+Federated Learning: Privacy-preserving collaborative threat detection
+Graph Neural Networks: Relationship analysis for attack graphs and social networks
+Practical Implementation Guidance:
+The document provides detailed implementation roadmaps, algorithm selection guidelines based on data characteristics, and specific recommendations for:
+
+Real-time vs. batch processing requirements
+High-dimensional data handling
+Interpretability requirements for legal proceedings
+Scalability considerations for enterprise deployment
+Key Features for Your DAFF Project:
+Performance metrics: Specific detection accuracy rates (94.7% with AI-enhanced systems)
+Use case examples: Practical applications in financial fraud, healthcare, manufacturing, and government
+Comparison matrices: Side-by-side algorithm comparisons for informed selection
+Implementation best practices: Data preprocessing, model validation, and deployment strategies
+The analysis emphasizes both current industry standards and emerging technologies, providing a foundation for enhancing your DAFF framework with state-of-the-art algorithmic approaches while maintaining the academic rigor expected for your JSS Science and Technology University project.
