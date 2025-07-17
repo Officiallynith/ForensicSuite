@@ -24,6 +24,32 @@
   --ring: hsl(20, 14.3%, 4.1%);
   --radius: 0.5rem;
   
+  /* Linux Tools Theme Colors - Terminal Inspired */
+  --terminal-bg: hsl(0, 0%, 12%);
+  --terminal-fg: hsl(0, 0%, 80%);
+  --terminal-accent: hsl(197, 78%, 52%);
+  --terminal-success: hsl(142, 71%, 45%);
+  --terminal-warning: hsl(31, 100%, 56%);
+  --terminal-error: hsl(349, 89%, 60%);
+  --terminal-processing: hsl(197, 78%, 52%);
+  --terminal-muted: hsl(0, 0%, 45%);
+  --terminal-border: hsl(0, 0%, 26%);
+  --terminal-header: hsl(0, 0%, 15%);
+  
+  /* Wireshark-inspired Colors */
+  --wireshark-bg: hsl(0, 0%, 96%);
+  --wireshark-panel: hsl(0, 0%, 100%);
+  --wireshark-border: hsl(0, 0%, 80%);
+  --wireshark-selection: hsl(206, 100%, 96%);
+  --wireshark-text: hsl(0, 0%, 20%);
+  
+  /* Status Colors */
+  --status-complete: hsl(142, 71%, 45%);
+  --status-warning: hsl(31, 100%, 56%);
+  --status-error: hsl(349, 89%, 60%);
+  --status-processing: hsl(197, 78%, 52%);
+  --status-pending: hsl(0, 0%, 55%);
+  
   /* DAFF Dark Theme Colors */
   --dark-50: hsl(0, 0%, 98%);
   --dark-100: hsl(0, 0%, 96%);
@@ -94,6 +120,32 @@
 }
 
 @layer utilities {
+  /* Linux Tools Terminal Theme */
+  .terminal-bg { background-color: var(--terminal-bg); }
+  .terminal-fg { color: var(--terminal-fg); }
+  .terminal-accent { color: var(--terminal-accent); }
+  .terminal-success { color: var(--terminal-success); }
+  .terminal-warning { color: var(--terminal-warning); }
+  .terminal-error { color: var(--terminal-error); }
+  .terminal-processing { color: var(--terminal-processing); }
+  .terminal-muted { color: var(--terminal-muted); }
+  .terminal-border { border-color: var(--terminal-border); }
+  .terminal-header { background-color: var(--terminal-header); }
+  
+  /* Wireshark Theme */
+  .wireshark-bg { background-color: var(--wireshark-bg); }
+  .wireshark-panel { background-color: var(--wireshark-panel); }
+  .wireshark-border { border-color: var(--wireshark-border); }
+  .wireshark-selection { background-color: var(--wireshark-selection); }
+  .wireshark-text { color: var(--wireshark-text); }
+  
+  /* Status Indicators */
+  .status-complete { color: var(--status-complete); }
+  .status-warning { color: var(--status-warning); }
+  .status-error { color: var(--status-error); }
+  .status-processing { color: var(--status-processing); }
+  .status-pending { color: var(--status-pending); }
+  
   /* Dark theme utility classes */
   .bg-dark-50 { background-color: var(--dark-50); }
   .bg-dark-100 { background-color: var(--dark-100); }
@@ -150,6 +202,22 @@
   .border-primary { border-color: var(--primary); }
   .border-accent { border-color: var(--accent); }
   
+  /* Linux Tools UI Components */
+  .mono-font { font-family: 'JetBrains Mono', 'Fira Code', 'Source Code Pro', 'Consolas', monospace; }
+  .pane-divider { border-right: 1px solid var(--terminal-border); }
+  .toolbar-btn { 
+    @apply px-3 py-1 text-sm hover:bg-gray-700 transition-colors rounded;
+  }
+  .status-indicator {
+    @apply inline-block w-2 h-2 rounded-full mr-2;
+  }
+  .console-line {
+    @apply mono-font text-sm py-1 px-2 border-l-2 border-transparent;
+  }
+  .console-line:hover {
+    @apply bg-gray-800/50 border-l-blue-500;
+  }
+  
   /* Custom animations */
   .animate-pulse-slow {
     animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -171,5 +239,16 @@
   .hover-lift:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Multi-pane layout */
+  .pane-header {
+    @apply bg-gray-800 border-b border-gray-700 px-4 py-2 text-sm font-medium;
+  }
+  .pane-content {
+    @apply flex-1 overflow-auto;
+  }
+  .resizable-pane {
+    @apply border-r border-gray-700 resize-x overflow-auto;
   }
 }

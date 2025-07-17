@@ -1,10 +1,17 @@
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import InterfaceToggle from "@/components/InterfaceToggle";
+import { useLocation } from "wouter";
+import { Terminal, Monitor, ArrowRight } from "lucide-react";
 
 export default function DashboardNew() {
+  const [, setLocation] = useLocation();
+  
   return (
     <div className="min-h-screen bg-gray-900 text-white">
+      <InterfaceToggle />
       {/* Introduction Section - Visually Distinct Header */}
       <div className="bg-gradient-to-br from-slate-800 via-blue-900 to-purple-900 border-b-4 border-blue-500">
         <div className="container mx-auto px-6 py-16">
@@ -144,6 +151,35 @@ export default function DashboardNew() {
             <CardContent>
               <p className="text-sm text-yellow-400 font-medium">Systems Ready</p>
               <p className="text-xs text-gray-400 mt-1">Current world analysis ready</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Linux Tools Interface Highlight */}
+        <div className="mb-12">
+          <Card className="bg-gradient-to-r from-gray-800 to-gray-700 border-2 border-blue-500/50 hover:border-blue-400 transition-all duration-300">
+            <CardContent className="p-8">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <div className="p-3 bg-blue-600 rounded-lg">
+                    <Terminal className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-2">Linux Tools Interface</h3>
+                    <p className="text-gray-300 max-w-2xl">
+                      Professional forensic analysis interface inspired by Wireshark and Nmap. Features multi-pane layout, 
+                      terminal-style console, and comprehensive keyboard shortcuts for efficient workflow.
+                    </p>
+                  </div>
+                </div>
+                <Button 
+                  onClick={() => setLocation('/')}
+                  className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 flex items-center space-x-2"
+                >
+                  <span>Launch Interface</span>
+                  <ArrowRight className="w-5 h-5" />
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
