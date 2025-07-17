@@ -81,7 +81,7 @@ const mockConsoleMessages: ConsoleMessage[] = [
   { id: '7', timestamp: '14:31:37', type: 'success', message: 'Analysis complete: 3 threats identified' }
 ];
 
-export default function LinuxToolsLayout() {
+export default function ToolsLayout() {
   const [selectedEvidence, setSelectedEvidence] = useState<Evidence | null>(mockEvidence[0]);
   const [filterText, setFilterText] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -112,7 +112,7 @@ export default function LinuxToolsLayout() {
     }
   }, [isAnalyzing]);
 
-  // Keyboard shortcuts for Linux tools interface
+  // Keyboard shortcuts for Tools interface
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Don't handle shortcuts when typing in inputs

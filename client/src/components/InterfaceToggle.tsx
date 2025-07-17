@@ -23,7 +23,7 @@ export default function InterfaceToggle() {
 
       if (e.ctrlKey && e.key === '1') {
         e.preventDefault();
-        setLocation('/');
+        setLocation('/tools');
       } else if (e.ctrlKey && e.key === '2') {
         e.preventDefault();
         setLocation('/academic');
@@ -39,7 +39,7 @@ export default function InterfaceToggle() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [setLocation, showShortcuts]);
 
-  const isLinuxTools = location === '/' || location === '/linux-tools';
+  const isLinuxTools = location === '/tools';
   const isAcademic = location === '/academic' || location === '/dashboard';
 
   return (
@@ -49,11 +49,11 @@ export default function InterfaceToggle() {
         <Button
           size="sm"
           variant={isLinuxTools ? "default" : "ghost"}
-          onClick={() => setLocation('/')}
+          onClick={() => setLocation('/tools')}
           className="flex items-center space-x-1"
         >
           <Terminal className="w-4 h-4" />
-          <span>Linux Tools</span>
+          <span>Tools</span>
         </Button>
         <Button
           size="sm"
@@ -94,7 +94,7 @@ export default function InterfaceToggle() {
                 <h4 className="font-medium text-blue-400 mb-2">Interface Navigation</h4>
                 <div className="space-y-1">
                   <div className="flex justify-between">
-                    <span className="text-gray-300">Linux Tools Interface</span>
+                    <span className="text-gray-300">Tools Interface</span>
                     <kbd className="px-2 py-1 bg-gray-800 rounded text-xs mono-font">Ctrl+1</kbd>
                   </div>
                   <div className="flex justify-between">
@@ -109,7 +109,7 @@ export default function InterfaceToggle() {
               </div>
               
               <div>
-                <h4 className="font-medium text-green-400 mb-2">Linux Tools Interface</h4>
+                <h4 className="font-medium text-green-400 mb-2">Tools Interface</h4>
                 <div className="space-y-1">
                   <div className="flex justify-between">
                     <span className="text-gray-300">Start/Pause Analysis</span>

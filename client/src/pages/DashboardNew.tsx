@@ -165,9 +165,9 @@ export default function DashboardNew() {
                     <Terminal className="w-8 h-8 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Linux Tools Interface</h3>
+                    <h3 className="text-2xl font-bold text-white mb-2">Professional Tools Interface</h3>
                     <p className="text-gray-300 max-w-2xl">
-                      Professional forensic analysis interface inspired by Wireshark and Nmap. Features multi-pane layout, 
+                      Advanced forensic analysis interface inspired by professional tools like Wireshark and Nmap. Features multi-pane layout, 
                       terminal-style console, and comprehensive keyboard shortcuts for efficient workflow.
                     </p>
                   </div>

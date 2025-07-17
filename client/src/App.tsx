@@ -3,8 +3,9 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import Introduction from "@/pages/Introduction";
 import Dashboard from "@/pages/DashboardNew";
-import LinuxToolsInterface from "@/pages/LinuxToolsInterface";
+import ToolsInterface from "@/pages/LinuxToolsInterface";
 import AnomalyDetection from "@/pages/AnomalyDetection";
 import AutomatedAnalysis from "@/pages/AutomatedAnalysis";
 import DFFDocumentation from "@/pages/DFFDocumentation";
@@ -18,8 +19,9 @@ import NotFound from "@/pages/not-found";
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={LinuxToolsInterface} />
-      <Route path="/linux-tools" component={LinuxToolsInterface} />
+      <Route path="/" component={Introduction} />
+      <Route path="/intro" component={Introduction} />
+      <Route path="/tools" component={ToolsInterface} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/academic" component={Dashboard} />
       <Route path="/anomaly-detection" component={AnomalyDetection} />

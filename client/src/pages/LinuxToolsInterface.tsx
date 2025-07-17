@@ -1,5 +1,5 @@
-import LinuxToolsLayout from "@/components/LinuxToolsLayout";
+import ToolsLayout from "@/components/LinuxToolsLayout";
 
-export default function LinuxToolsInterface() {
-  return <LinuxToolsLayout />;
+export default function ToolsInterface() {
+  return <ToolsLayout />;
 }
