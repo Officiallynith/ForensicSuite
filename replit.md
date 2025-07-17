@@ -131,6 +131,13 @@ Key entities include:
 
 **DAFF Security Defender System**: Comprehensive cybersecurity application with real-time protection, AI-powered threat detection, local processing, and seamless DAFF integration for evidence preservation and analysis.
 
+**Cloud Run Deployment Optimization (Jan 2025)**: Applied critical deployment fixes for Replit Cloud Run compatibility:
+- **Health Check Endpoints**: Added `/health` and `/ready` endpoints for deployment readiness verification
+- **Host Configuration**: Server configured to listen on `0.0.0.0` interface with environment-based port assignment
+- **Graceful Shutdown**: Implemented SIGTERM and SIGINT handlers for proper autoscale shutdown compatibility
+- **Environment Variables**: Enhanced PORT and HOST configuration for Cloud Run deployment requirements
+- **Endpoint Priority**: Health checks registered before route middleware to prevent frontend routing conflicts
+
 ## Data Flow
 
 1. **Evidence Upload**: Files uploaded through REST API with metadata extraction

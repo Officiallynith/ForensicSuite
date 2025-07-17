@@ -6,6 +6,36 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Health check endpoints - Must be registered first!
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "healthy",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || "development",
+    version: "1.0.0"
+  });
+});
+
+app.get("/ready", async (req, res) => {
+  try {
+    res.status(200).json({
+      status: "ready",
+      timestamp: new Date().toISOString(),
+      services: {
+        server: "operational",
+        environment: process.env.NODE_ENV || "development"
+      }
+    });
+  } catch (error) {
+    res.status(503).json({
+      status: "not ready",
+      timestamp: new Date().toISOString(),
+      error: error instanceof Error ? error.message : "Service unavailable"
+    });
+  }
+});
+
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -56,15 +86,28 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
+  // Use environment port or default to 5000 for Cloud Run compatibility
+  const port = parseInt(process.env.PORT || "5000", 10);
+  const host = process.env.HOST || "0.0.0.0";
+  
+  server.listen(port, host, () => {
+    log(`serving on ${host}:${port}`);
+  });
+
+  // Graceful shutdown for Cloud Run autoscale compatibility
+  process.on('SIGTERM', () => {
+    log('SIGTERM received, shutting down gracefully');
+    server.close(() => {
+      log('Server closed');
+      process.exit(0);
+    });
+  });
+
+  process.on('SIGINT', () => {
+    log('SIGINT received, shutting down gracefully');
+    server.close(() => {
+      log('Server closed');
+      process.exit(0);
+    });
   });
 })();
