@@ -30,7 +30,6 @@ DAFF (Digital Automation Forensic Framework) is an advanced AI-driven platform d
 **Important:** To avoid confusion, please note the following terminology:
 
 - **DAFF**: Digital Automation Forensic Framework (this project)
-- **DFF**: Digital Forensic Framework (NOT "Development Framework Framework")
 
 The framework focuses specifically on digital forensics and cybersecurity analysis, not general development frameworks.
 
