@@ -122,6 +122,13 @@ Key entities include:
 - **Comprehensive Testing Plan**: User testing methodology with accessibility compliance and performance metrics
 - **Implementation Roadmap**: 8-week deployment strategy with stakeholder feedback integration
 
+**Cross-Platform Installation Guide (Jan 2025)**: Created comprehensive installation documentation for Windows and Linux:
+- **System Requirements**: Detailed minimum and recommended specifications for both operating systems
+- **Step-by-Step Instructions**: Platform-specific installation procedures with command examples
+- **Troubleshooting Matrix**: Common errors and solutions organized by symptom and platform
+- **Performance Optimization**: System-level and application-level tuning recommendations
+- **Emergency Support**: Diagnostic procedures and professional support contact information
+
 **DAFF Security Defender System**: Comprehensive cybersecurity application with real-time protection, AI-powered threat detection, local processing, and seamless DAFF integration for evidence preservation and analysis.
 
 ## Data Flow
