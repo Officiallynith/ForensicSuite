@@ -13,19 +13,28 @@ app.get("/health", (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || "development",
-    version: "1.0.0"
+    version: "1.0.0",
+    memory: {
+      used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+      total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024)
+    }
   });
 });
 
 app.get("/ready", async (req, res) => {
   try {
+    // Add basic readiness checks
+    const checks = {
+      server: "operational",
+      environment: process.env.NODE_ENV || "development",
+      port: process.env.PORT || "5000",
+      host: "0.0.0.0"
+    };
+    
     res.status(200).json({
       status: "ready",
       timestamp: new Date().toISOString(),
-      services: {
-        server: "operational",
-        environment: process.env.NODE_ENV || "development"
-      }
+      services: checks
     });
   } catch (error) {
     res.status(503).json({
@@ -35,6 +44,8 @@ app.get("/ready", async (req, res) => {
     });
   }
 });
+
+
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -88,26 +99,39 @@ app.use((req, res, next) => {
 
   // Use environment port or default to 5000 for Cloud Run compatibility
   const port = parseInt(process.env.PORT || "5000", 10);
-  const host = process.env.HOST || "0.0.0.0";
+  const host = "0.0.0.0"; // Always use 0.0.0.0 for Cloud Run
   
   server.listen(port, host, () => {
     log(`serving on ${host}:${port}`);
+    log(`Server ready for Cloud Run deployment`);
   });
 
   // Graceful shutdown for Cloud Run autoscale compatibility
-  process.on('SIGTERM', () => {
-    log('SIGTERM received, shutting down gracefully');
+  const gracefulShutdown = (signal: string) => {
+    log(`${signal} received, shutting down gracefully`);
     server.close(() => {
       log('Server closed');
       process.exit(0);
     });
+    
+    // Force close after 30 seconds
+    setTimeout(() => {
+      log('Forcing server close after timeout');
+      process.exit(1);
+    }, 30000);
+  };
+
+  process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+  process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+  
+  // Handle uncaught exceptions
+  process.on('uncaughtException', (error) => {
+    log(`Uncaught exception: ${error.message}`);
+    gracefulShutdown('UNCAUGHT_EXCEPTION');
   });
 
-  process.on('SIGINT', () => {
-    log('SIGINT received, shutting down gracefully');
-    server.close(() => {
-      log('Server closed');
-      process.exit(0);
-    });
+  process.on('unhandledRejection', (reason, promise) => {
+    log(`Unhandled rejection at: ${promise}, reason: ${reason}`);
+    gracefulShutdown('UNHANDLED_REJECTION');
   });
 })();

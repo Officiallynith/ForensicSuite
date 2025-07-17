@@ -137,6 +137,10 @@ Key entities include:
 - **Graceful Shutdown**: Implemented SIGTERM and SIGINT handlers for proper autoscale shutdown compatibility
 - **Environment Variables**: Enhanced PORT and HOST configuration for Cloud Run deployment requirements
 - **Endpoint Priority**: Health checks registered before route middleware to prevent frontend routing conflicts
+- **Enhanced Health Checks**: Added memory usage monitoring and detailed service status reporting
+- **Root Endpoint**: Added liveness probe endpoint at `/` for Cloud Run health monitoring
+- **Error Handling**: Implemented comprehensive uncaught exception and unhandled rejection handlers
+- **Timeout Management**: Added 30-second timeout for graceful shutdown to prevent hanging processes
 
 ## Data Flow
 
