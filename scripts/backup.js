@@ -10,6 +10,28 @@ const path = require('path');
 const { exec } = require('child_process');
 const crypto = require('crypto');
 
+// Security utility for path validation
+function validateAndSanitizePath(inputPath) {
+  if (!inputPath || typeof inputPath !== 'string') {
+    throw new Error('Invalid path: path must be a non-empty string');
+  }
+  
+  // Resolve to absolute path and normalize
+  const resolvedPath = path.resolve(inputPath);
+  
+  // Check for directory traversal attempts
+  if (resolvedPath.includes('..') || resolvedPath !== path.normalize(resolvedPath)) {
+    throw new Error('Invalid path: directory traversal detected');
+  }
+  
+  // Ensure path doesn't contain dangerous characters for shell commands
+  if (/[;&|`$(){}[\]<>*?~]/.test(resolvedPath)) {
+    throw new Error('Invalid path: contains potentially dangerous characters');
+  }
+  
+  return resolvedPath;
+}
+
 class LocalBackupManager {
   constructor() {
     this.backupPath = process.env.BACKUP_STORAGE_PATH || './local_storage/backups';
@@ -64,7 +86,8 @@ class LocalBackupManager {
   async backupDatabase(backupDir, timestamp) {
     console.log('📊 Backing up database...');
     
-    const dbBackupFile = path.join(backupDir, `database-${timestamp}.sql`);
+    const sanitizedBackupDir = validateAndSanitizePath(backupDir);
+    const dbBackupFile = path.join(sanitizedBackupDir, `database-${timestamp}.sql`);
     const command = `pg_dump -h ${this.dbConfig.host} -U ${this.dbConfig.user} -d ${this.dbConfig.database} -f "${dbBackupFile}"`;
     
     return new Promise((resolve, reject) => {
@@ -87,7 +110,8 @@ class LocalBackupManager {
       return;
     }
     
-    const evidenceBackupFile = path.join(backupDir, `evidence-${timestamp}.tar`);
+    const sanitizedBackupDir = validateAndSanitizePath(backupDir);
+    const evidenceBackupFile = path.join(sanitizedBackupDir, `evidence-${timestamp}.tar`);
     const command = `tar -cf "${evidenceBackupFile}" -C "${path.dirname(this.evidencePath)}" "${path.basename(this.evidencePath)}"`;
     
     return new Promise((resolve, reject) => {
@@ -110,7 +134,8 @@ class LocalBackupManager {
       return;
     }
     
-    const logBackupFile = path.join(backupDir, `logs-${timestamp}.tar`);
+    const sanitizedBackupDir = validateAndSanitizePath(backupDir);
+    const logBackupFile = path.join(sanitizedBackupDir, `logs-${timestamp}.tar`);
     const command = `tar -cf "${logBackupFile}" -C "${path.dirname(this.logPath)}" "${path.basename(this.logPath)}"`;
     
     return new Promise((resolve, reject) => {
@@ -128,6 +153,7 @@ class LocalBackupManager {
   async createBackupManifest(backupDir, timestamp) {
     console.log('📝 Creating backup manifest...');
     
+    const sanitizedBackupDir = validateAndSanitizePath(backupDir);
     const manifest = {
       timestamp,
       version: '1.0.0',
@@ -138,9 +164,9 @@ class LocalBackupManager {
     };
     
     // Get file list and checksums
-    const files = await fs.promises.readdir(backupDir);
+    const files = await fs.promises.readdir(sanitizedBackupDir);
     for (const file of files) {
-      const filePath = path.join(backupDir, file);
+      const filePath = path.join(sanitizedBackupDir, file);
       const stats = await fs.promises.stat(filePath);
       
       if (stats.isFile()) {
@@ -155,7 +181,7 @@ class LocalBackupManager {
       }
     }
     
-    const manifestPath = path.join(backupDir, 'manifest.json');
+    const manifestPath = path.join(sanitizedBackupDir, 'manifest.json');
     await fs.promises.writeFile(manifestPath, JSON.stringify(manifest, null, 2));
     
     console.log('✓ Backup manifest created');
@@ -164,8 +190,9 @@ class LocalBackupManager {
   async compressBackup(backupDir) {
     console.log('🗜️ Compressing backup...');
     
-    const compressedFile = `${backupDir}.tar.gz`;
-    const command = `tar -czf "${compressedFile}" -C "${path.dirname(backupDir)}" "${path.basename(backupDir)}"`;
+    const sanitizedBackupDir = validateAndSanitizePath(backupDir);
+    const compressedFile = `${sanitizedBackupDir}.tar.gz`;
+    const command = `tar -czf "${compressedFile}" -C "${path.dirname(sanitizedBackupDir)}" "${path.basename(sanitizedBackupDir)}"`;
     
     return new Promise((resolve, reject) => {
       exec(command, (error, stdout, stderr) => {
@@ -173,7 +200,7 @@ class LocalBackupManager {
           reject(new Error(`Compression failed: ${error.message}`));
         } else {
           // Remove uncompressed directory
-          this.removeDirectory(backupDir);
+          this.removeDirectory(sanitizedBackupDir);
           console.log('✓ Backup compressed');
           resolve(compressedFile);
         }
@@ -214,8 +241,9 @@ class LocalBackupManager {
   }
 
   async extractBackup(compressedPath) {
-    const extractDir = compressedPath.replace('.tar.gz', '');
-    const command = `tar -xzf "${compressedPath}" -C "${path.dirname(compressedPath)}"`;
+    const sanitizedPath = validateAndSanitizePath(compressedPath);
+    const extractDir = sanitizedPath.replace('.tar.gz', '');
+    const command = `tar -xzf "${sanitizedPath}" -C "${path.dirname(sanitizedPath)}"`;
     
     return new Promise((resolve, reject) => {
       exec(command, (error, stdout, stderr) => {
@@ -232,7 +260,8 @@ class LocalBackupManager {
   async verifyBackupIntegrity(backupDir) {
     console.log('🔍 Verifying backup integrity...');
     
-    const manifestPath = path.join(backupDir, 'manifest.json');
+    const sanitizedBackupDir = validateAndSanitizePath(backupDir);
+    const manifestPath = path.join(sanitizedBackupDir, 'manifest.json');
     if (!fs.existsSync(manifestPath)) {
       throw new Error('Backup manifest not found');
     }
@@ -243,7 +272,7 @@ class LocalBackupManager {
     for (const [filename, expectedChecksum] of Object.entries(manifest.checksums)) {
       if (filename === 'manifest.json') continue;
       
-      const filePath = path.join(backupDir, filename);
+      const filePath = path.join(sanitizedBackupDir, filename);
       if (!fs.existsSync(filePath)) {
         throw new Error(`Missing backup file: ${filename}`);
       }
@@ -262,13 +291,14 @@ class LocalBackupManager {
   async restoreDatabase(backupDir) {
     console.log('📊 Restoring database...');
     
-    const dbFiles = (await fs.promises.readdir(backupDir)).filter(f => f.startsWith('database-') && f.endsWith('.sql'));
+    const sanitizedBackupDir = validateAndSanitizePath(backupDir);
+    const dbFiles = (await fs.promises.readdir(sanitizedBackupDir)).filter(f => f.startsWith('database-') && f.endsWith('.sql'));
     
     if (dbFiles.length === 0) {
       throw new Error('No database backup file found');
     }
     
-    const dbBackupFile = path.join(backupDir, dbFiles[0]);
+    const dbBackupFile = path.join(sanitizedBackupDir, dbFiles[0]);
     const command = `psql -h ${this.dbConfig.host} -U ${this.dbConfig.user} -d ${this.dbConfig.database} -f "${dbBackupFile}"`;
     
     return new Promise((resolve, reject) => {
@@ -286,14 +316,15 @@ class LocalBackupManager {
   async restoreEvidence(backupDir) {
     console.log('📁 Restoring evidence files...');
     
-    const evidenceFiles = (await fs.promises.readdir(backupDir)).filter(f => f.startsWith('evidence-') && f.endsWith('.tar'));
+    const sanitizedBackupDir = validateAndSanitizePath(backupDir);
+    const evidenceFiles = (await fs.promises.readdir(sanitizedBackupDir)).filter(f => f.startsWith('evidence-') && f.endsWith('.tar'));
     
     if (evidenceFiles.length === 0) {
       console.log('ℹ️ No evidence backup to restore');
       return;
     }
     
-    const evidenceBackupFile = path.join(backupDir, evidenceFiles[0]);
+    const evidenceBackupFile = path.join(sanitizedBackupDir, evidenceFiles[0]);
     const command = `tar -xf "${evidenceBackupFile}" -C "${path.dirname(this.evidencePath)}"`;
     
     return new Promise((resolve, reject) => {
@@ -311,14 +342,15 @@ class LocalBackupManager {
   async restoreLogs(backupDir) {
     console.log('📋 Restoring log files...');
     
-    const logFiles = (await fs.promises.readdir(backupDir)).filter(f => f.startsWith('logs-') && f.endsWith('.tar'));
+    const sanitizedBackupDir = validateAndSanitizePath(backupDir);
+    const logFiles = (await fs.promises.readdir(sanitizedBackupDir)).filter(f => f.startsWith('logs-') && f.endsWith('.tar'));
     
     if (logFiles.length === 0) {
       console.log('ℹ️ No log backup to restore');
       return;
     }
     
-    const logBackupFile = path.join(backupDir, logFiles[0]);
+    const logBackupFile = path.join(sanitizedBackupDir, logFiles[0]);
     const command = `tar -xf "${logBackupFile}" -C "${path.dirname(this.logPath)}"`;
     
     return new Promise((resolve, reject) => {
@@ -423,7 +455,14 @@ if (require.main === module) {
         console.error('Usage: node backup.js restore <backup-path>');
         process.exit(1);
       }
-      backup.restoreBackup(backupPath).catch(console.error);
+      
+      try {
+        const sanitizedPath = validateAndSanitizePath(backupPath);
+        backup.restoreBackup(sanitizedPath).catch(console.error);
+      } catch (error) {
+        console.error('Error: Invalid backup path -', error.message);
+        process.exit(1);
+      }
       break;
       
     case 'list':
