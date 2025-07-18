@@ -1,0 +1,11 @@
+{
+  "allowlist": [],
+  "high": true,
+  "moderate": false,
+  "low": false,
+  "critical": true,
+  "report-type": "summary",
+  "package-manager": "npm",
+  "path": "./",
+  "dev-audit": true
+}
