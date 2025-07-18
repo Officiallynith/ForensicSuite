@@ -32,6 +32,17 @@ function validateAndSanitizePath(inputPath) {
   return resolvedPath;
 }
 
+// Security utility for sanitizing filenames and timestamps used in shell commands
+function sanitizeForShell(input) {
+  if (!input || typeof input !== 'string') {
+    throw new Error('Invalid input: must be a non-empty string');
+  }
+  
+  // Remove or replace dangerous characters for shell commands
+  // Allow only alphanumeric, hyphens, underscores, and dots
+  return input.replace(/[^a-zA-Z0-9\-_.]/g, '-');
+}
+
 class LocalBackupManager {
   constructor() {
     this.backupPath = process.env.BACKUP_STORAGE_PATH || './local_storage/backups';
@@ -87,7 +98,8 @@ class LocalBackupManager {
     console.log('📊 Backing up database...');
     
     const sanitizedBackupDir = validateAndSanitizePath(backupDir);
-    const dbBackupFile = path.join(sanitizedBackupDir, `database-${timestamp}.sql`);
+    const sanitizedTimestamp = sanitizeForShell(timestamp);
+    const dbBackupFile = path.join(sanitizedBackupDir, `database-${sanitizedTimestamp}.sql`);
     const command = `pg_dump -h ${this.dbConfig.host} -U ${this.dbConfig.user} -d ${this.dbConfig.database} -f "${dbBackupFile}"`;
     
     return new Promise((resolve, reject) => {
@@ -111,7 +123,8 @@ class LocalBackupManager {
     }
     
     const sanitizedBackupDir = validateAndSanitizePath(backupDir);
-    const evidenceBackupFile = path.join(sanitizedBackupDir, `evidence-${timestamp}.tar`);
+    const sanitizedTimestamp = sanitizeForShell(timestamp);
+    const evidenceBackupFile = path.join(sanitizedBackupDir, `evidence-${sanitizedTimestamp}.tar`);
     const command = `tar -cf "${evidenceBackupFile}" -C "${path.dirname(this.evidencePath)}" "${path.basename(this.evidencePath)}"`;
     
     return new Promise((resolve, reject) => {
@@ -135,7 +148,8 @@ class LocalBackupManager {
     }
     
     const sanitizedBackupDir = validateAndSanitizePath(backupDir);
-    const logBackupFile = path.join(sanitizedBackupDir, `logs-${timestamp}.tar`);
+    const sanitizedTimestamp = sanitizeForShell(timestamp);
+    const logBackupFile = path.join(sanitizedBackupDir, `logs-${sanitizedTimestamp}.tar`);
     const command = `tar -cf "${logBackupFile}" -C "${path.dirname(this.logPath)}" "${path.basename(this.logPath)}"`;
     
     return new Promise((resolve, reject) => {
