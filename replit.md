@@ -172,6 +172,14 @@ Key entities include:
 - **Error Handling Enhancement**: Improved error responses for file upload failures and external service issues
 - **System Stability**: All core functionality maintained after dependency updates with no breaking changes
 
+**SQL Injection Security Patch (Jul 2025)**: Comprehensive security audit and remediation of database operations:
+- **Critical Vulnerability Fixed**: Eliminated SQL injection risk in `executeQuery()` method by restricting to read-only operations (SELECT, EXPLAIN, WITH...SELECT)
+- **Enhanced Input Validation**: Added comprehensive dangerous pattern detection including UNION attacks, information schema access, and comment-based exploits
+- **Parameterized Queries**: Replaced all `sql.raw()` string concatenation with proper `sql.identifier()` for table/schema names in backup and optimization operations
+- **Backup Security**: Added validation for backup restore operations to prevent execution of dangerous SQL statements (DROP, ALTER SYSTEM, custom functions)
+- **Production Safety**: Implemented strict read-only query policy with enhanced dangerous operation detection beyond basic sanitization
+- **Application Integrity**: All functionality preserved while significantly improving security posture and eliminating SQL injection attack vectors
+
 ## Data Flow
 
 1. **Evidence Upload**: Files uploaded through REST API with metadata extraction

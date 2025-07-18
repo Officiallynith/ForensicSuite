@@ -91,8 +91,9 @@ export class DatabaseManager {
       let totalRows = 0;
 
       for (const table of tablesResult.rows) {
+        // Use parameterized query with proper escaping for table/schema names
         const countResult = await db.execute(
-          sql.raw(`SELECT COUNT(*) as count FROM ${table.schemaname}.${table.tablename}`)
+          sql`SELECT COUNT(*) as count FROM ${sql.identifier(table.schemaname)}.${sql.identifier(table.tablename)}`
         );
         const rowCount = Number(countResult.rows[0]?.count) || 0;
         totalRows += rowCount;
@@ -129,19 +130,30 @@ export class DatabaseManager {
         throw new Error('Query cannot be empty');
       }
 
-      // Prevent dangerous operations in production
-      if (process.env.NODE_ENV === 'production') {
-        const dangerousPatterns = [
-          /DROP\s+DATABASE/i,
-          /DROP\s+SCHEMA/i,
-          /TRUNCATE\s+TABLE/i,
-          /DELETE\s+FROM.*WHERE\s*$/i, // DELETE without proper WHERE clause
-        ];
+      // Enhanced security: Only allow safe read-only operations
+      const allowedPatterns = [
+        /^SELECT\s+/i,
+        /^EXPLAIN\s+/i,
+        /^WITH\s+.+\s+SELECT\s+/i,
+      ];
 
-        for (const pattern of dangerousPatterns) {
-          if (pattern.test(sanitizedQuery)) {
-            throw new Error('Dangerous operation not allowed in production');
-          }
+      const isAllowed = allowedPatterns.some(pattern => pattern.test(sanitizedQuery));
+      if (!isAllowed) {
+        throw new Error('Only SELECT, EXPLAIN, and WITH...SELECT queries are allowed for security reasons');
+      }
+
+      // Additional dangerous pattern checks
+      const dangerousPatterns = [
+        /;\s*(DROP|DELETE|UPDATE|INSERT|ALTER|CREATE|TRUNCATE)/i,
+        /UNION.*SELECT.*FROM.*information_schema/i,
+        /'\s*(OR|AND).*=.*=/i, // Basic SQL injection patterns
+        /--.*DROP/i,
+        /\/\*.*\*\//i, // Block comments that might hide malicious code
+      ];
+
+      for (const pattern of dangerousPatterns) {
+        if (pattern.test(sanitizedQuery)) {
+          throw new Error('Query contains potentially dangerous patterns and is not allowed');
         }
       }
 
@@ -183,7 +195,7 @@ export class DatabaseManager {
       if (type === 'full' || type === 'schema') {
         // Export schema
         for (const tableName of tables) {
-          const schemaResult = await db.execute(sql.raw(`
+          const schemaResult = await db.execute(sql`
             SELECT 
               'CREATE TABLE ' || quote_ident(table_name) || ' (' ||
               string_agg(column_definition, ', ') || 
@@ -203,11 +215,11 @@ export class DatabaseManager {
                   ELSE ''
                 END as column_definition
               FROM information_schema.columns 
-              WHERE table_name = '${tableName}' AND table_schema = 'public'
+              WHERE table_name = ${tableName} AND table_schema = 'public'
               ORDER BY ordinal_position
             ) t
             GROUP BY table_name
-          `));
+          `);
 
           if (schemaResult.rows.length > 0) {
             backupContent += `\n-- Table: ${tableName}\n`;
@@ -219,18 +231,18 @@ export class DatabaseManager {
       if (type === 'full' || type === 'data') {
         // Export data
         for (const tableName of tables) {
-          const dataResult = await db.execute(sql.raw(`SELECT * FROM ${tableName}`));
+          const dataResult = await db.execute(sql`SELECT * FROM ${sql.identifier(tableName)}`);
           
           if (dataResult.rows.length > 0) {
             backupContent += `\n-- Data for table: ${tableName}\n`;
             
             // Get column names
-            const columnsResult = await db.execute(sql.raw(`
+            const columnsResult = await db.execute(sql`
               SELECT column_name 
               FROM information_schema.columns 
-              WHERE table_name = '${tableName}' AND table_schema = 'public'
+              WHERE table_name = ${tableName} AND table_schema = 'public'
               ORDER BY ordinal_position
-            `));
+            `);
             
             const columns = columnsResult.rows.map(row => row.column_name);
             
@@ -319,6 +331,23 @@ export class DatabaseManager {
       const backupFilePath = path.join(this.backupPath, backup.filename);
       const backupContent = await fs.readFile(backupFilePath, 'utf8');
 
+      // Enhanced security validation for backup content
+      const dangerousPatterns = [
+        /DROP\s+DATABASE/i,
+        /DROP\s+SCHEMA/i,
+        /ALTER\s+SYSTEM/i,
+        /COPY.*FROM.*PROGRAM/i,
+        /\$\$.*\$\$/s, // Dollar-quoted strings that might contain malicious code
+        /DO\s+\$\$/i, // Anonymous code blocks
+        /CREATE.*FUNCTION.*LANGUAGE.*plpgsql/i, // Custom functions
+      ];
+
+      for (const pattern of dangerousPatterns) {
+        if (pattern.test(backupContent)) {
+          throw new Error('Backup contains potentially dangerous operations and cannot be restored');
+        }
+      }
+
       // Split content into individual statements
       const statements = backupContent
         .split('\n')
@@ -327,10 +356,24 @@ export class DatabaseManager {
         .split(';')
         .filter(stmt => stmt.trim());
 
-      // Execute statements one by one
+      // Validate each statement before execution
       for (const statement of statements) {
-        if (statement.trim()) {
-          await db.execute(sql.raw(statement.trim()));
+        const trimmedStatement = statement.trim();
+        if (trimmedStatement) {
+          // Only allow safe restore operations
+          const allowedRestorePatterns = [
+            /^CREATE\s+TABLE/i,
+            /^INSERT\s+INTO/i,
+            /^COMMENT\s+ON/i,
+          ];
+
+          const isAllowed = allowedRestorePatterns.some(pattern => pattern.test(trimmedStatement));
+          if (!isAllowed) {
+            console.warn(`Skipping potentially unsafe statement: ${trimmedStatement.substring(0, 100)}...`);
+            continue;
+          }
+
+          await db.execute(sql.raw(trimmedStatement));
         }
       }
     } catch (error) {
@@ -366,7 +409,7 @@ export class DatabaseManager {
       `);
 
       for (const table of tablesResult.rows) {
-        await db.execute(sql.raw(`VACUUM ANALYZE ${table.tablename}`));
+        await db.execute(sql`VACUUM ANALYZE ${sql.identifier(table.tablename)}`);
         optimizations.push(`Optimized table: ${table.tablename}`);
       }
 
