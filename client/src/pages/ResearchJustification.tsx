@@ -26,6 +26,7 @@ import {
 interface ResearchProject {
   title: string;
   field: string;
+  department: string;
   background: string;
   expertise: string;
   targetAudience: string;
@@ -47,6 +48,7 @@ export default function ResearchJustification() {
   const [project, setProject] = useState<ResearchProject>({
     title: "",
     field: "",
+    department: "Computer Science and Engineering",
     background: "",
     expertise: "",
     targetAudience: "",
@@ -186,6 +188,7 @@ ${project.practicalApplications}
 
 **Project Title:** ${project.title}
 **Field of Study:** ${project.field}
+**Department:** ${project.department}
 **Research Period:** Last ${project.timeframe} years
 **Target Audience:** ${project.targetAudience}
 
@@ -326,6 +329,19 @@ ${project.literatureReview}
                           value={project.field}
                           onChange={(e) => updateProject("field", e.target.value)}
                           placeholder="e.g., Digital Forensics, Computer Science"
+                          className="bg-slate-700 border-slate-600 text-white"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4">
+                      <div>
+                        <Label htmlFor="department" className="text-slate-300">Department</Label>
+                        <Input
+                          id="department"
+                          value={project.department}
+                          onChange={(e) => updateProject("department", e.target.value)}
+                          placeholder="e.g., Computer Science and Engineering"
                           className="bg-slate-700 border-slate-600 text-white"
                         />
                       </div>
