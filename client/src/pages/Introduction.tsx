@@ -37,14 +37,6 @@ export default function Introduction() {
           {/* Quick Access Buttons */}
           <div className="flex justify-center space-x-4 mb-12">
             <Button 
-              onClick={() => setLocation('/tools')}
-              className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 text-lg flex items-center space-x-2"
-            >
-              <Terminal className="w-6 h-6" />
-              <span>Launch Tools Interface</span>
-              <ArrowRight className="w-5 h-5" />
-            </Button>
-            <Button 
               onClick={() => setLocation('/academic')}
               className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 text-lg flex items-center space-x-2"
             >
@@ -210,15 +202,8 @@ export default function Introduction() {
             </p>
             <div className="flex justify-center space-x-4">
               <Button 
-                onClick={() => setLocation('/tools')}
-                className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 text-lg font-semibold"
-              >
-                Launch Tools Interface
-              </Button>
-              <Button 
                 onClick={() => setLocation('/academic')}
-                variant="outline"
-                className="border-white text-white hover:bg-white/10 px-8 py-3 text-lg"
+                className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 text-lg font-semibold"
               >
                 View Academic Dashboard
               </Button>
