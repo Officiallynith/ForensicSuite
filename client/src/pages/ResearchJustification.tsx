@@ -27,6 +27,13 @@ interface ResearchProject {
   title: string;
   field: string;
   department: string;
+  studentName: string;
+  institution: string;
+  university: string;
+  location: string;
+  state: string;
+  guide: string;
+  guidePosition: string;
   background: string;
   expertise: string;
   targetAudience: string;
@@ -46,9 +53,16 @@ interface ResearchProject {
 
 export default function ResearchJustification() {
   const [project, setProject] = useState<ResearchProject>({
-    title: "",
-    field: "",
+    title: "DAFF Framework",
+    field: "Digital Forensics",
     department: "Computer Science and Engineering",
+    studentName: "Nithin H K",
+    institution: "JSS Mahavidyapeetha",
+    university: "JSS Science & Technology",
+    location: "Mysuru – 570 006",
+    state: "Karnataka, India",
+    guide: "Shwetha S",
+    guidePosition: "Assistant Professor",
     background: "",
     expertise: "",
     targetAudience: "",
@@ -186,9 +200,24 @@ ${project.practicalApplications}
     const fullDocument = `
 # Academic Research Project Justification
 
-**Project Title:** ${project.title}
-**Field of Study:** ${project.field}
+## Student Information
+**Name:** ${project.studentName}
 **Department:** ${project.department}
+**Project:** ${project.title}
+**Focus:** ${project.field}
+
+## Institution Details
+**Institution:** ${project.institution}
+**University:** ${project.university}
+**Location:** ${project.location}
+**State:** ${project.state}
+
+## Supervision & Guidance
+**Guide:** ${project.guide}
+**Position:** ${project.guidePosition}
+**Department:** ${project.department}
+
+## Research Configuration
 **Research Period:** Last ${project.timeframe} years
 **Target Audience:** ${project.targetAudience}
 
@@ -308,88 +337,205 @@ ${project.literatureReview}
             <Card className="bg-slate-800/50 border-slate-700 min-h-[600px]">
               <CardContent className="p-6">
                 {activeSection === "overview" && (
-                  <div className="space-y-6">
-                    <h2 className="text-2xl font-bold text-white">Project Overview</h2>
+                  <div className="space-y-8">
+                    <h2 className="text-2xl font-bold text-white">Academic Research Project</h2>
                     
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="title" className="text-slate-300">Project Title</Label>
-                        <Input
-                          id="title"
-                          value={project.title}
-                          onChange={(e) => updateProject("title", e.target.value)}
-                          placeholder="Enter your research project title"
-                          className="bg-slate-700 border-slate-600 text-white"
-                        />
+                    {/* Student Information Section */}
+                    <div className="bg-slate-700/30 p-6 rounded-lg border border-slate-600">
+                      <h3 className="text-xl font-semibold text-white mb-4 flex items-center">
+                        <Users className="w-5 h-5 mr-2" />
+                        Student Information
+                      </h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="studentName" className="text-slate-300">Name</Label>
+                          <Input
+                            id="studentName"
+                            value={project.studentName}
+                            onChange={(e) => updateProject("studentName", e.target.value)}
+                            placeholder="Enter student name"
+                            className="bg-slate-700 border-slate-600 text-white"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="department" className="text-slate-300">Department</Label>
+                          <Input
+                            id="department"
+                            value={project.department}
+                            onChange={(e) => updateProject("department", e.target.value)}
+                            placeholder="e.g., Computer Science and Engineering"
+                            className="bg-slate-700 border-slate-600 text-white"
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <Label htmlFor="field" className="text-slate-300">Field of Study</Label>
-                        <Input
-                          id="field"
-                          value={project.field}
-                          onChange={(e) => updateProject("field", e.target.value)}
-                          placeholder="e.g., Digital Forensics, Computer Science"
-                          className="bg-slate-700 border-slate-600 text-white"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 gap-4">
-                      <div>
-                        <Label htmlFor="department" className="text-slate-300">Department</Label>
-                        <Input
-                          id="department"
-                          value={project.department}
-                          onChange={(e) => updateProject("department", e.target.value)}
-                          placeholder="e.g., Computer Science and Engineering"
-                          className="bg-slate-700 border-slate-600 text-white"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="background" className="text-slate-300">Your Background</Label>
-                        <Input
-                          id="background"
-                          value={project.background}
-                          onChange={(e) => updateProject("background", e.target.value)}
-                          placeholder="Your academic/professional background"
-                          className="bg-slate-700 border-slate-600 text-white"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="expertise" className="text-slate-300">Area of Expertise</Label>
-                        <Input
-                          id="expertise"
-                          value={project.expertise}
-                          onChange={(e) => updateProject("expertise", e.target.value)}
-                          placeholder="Your area of expertise"
-                          className="bg-slate-700 border-slate-600 text-white"
-                        />
+                      <div className="grid grid-cols-2 gap-4 mt-4">
+                        <div>
+                          <Label htmlFor="title" className="text-slate-300">Project</Label>
+                          <Input
+                            id="title"
+                            value={project.title}
+                            onChange={(e) => updateProject("title", e.target.value)}
+                            placeholder="Enter project title"
+                            className="bg-slate-700 border-slate-600 text-white"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="field" className="text-slate-300">Focus</Label>
+                          <Input
+                            id="field"
+                            value={project.field}
+                            onChange={(e) => updateProject("field", e.target.value)}
+                            placeholder="e.g., Digital Forensics"
+                            className="bg-slate-700 border-slate-600 text-white"
+                          />
+                        </div>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="audience" className="text-slate-300">Target Audience</Label>
-                        <Input
-                          id="audience"
-                          value={project.targetAudience}
-                          onChange={(e) => updateProject("targetAudience", e.target.value)}
-                          placeholder="e.g., University Grant Committee, NSF"
-                          className="bg-slate-700 border-slate-600 text-white"
-                        />
+                    {/* Institution Details Section */}
+                    <div className="bg-slate-700/30 p-6 rounded-lg border border-slate-600">
+                      <h3 className="text-xl font-semibold text-white mb-4 flex items-center">
+                        <BookOpen className="w-5 h-5 mr-2" />
+                        Institution Details
+                      </h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="institution" className="text-slate-300">Institution</Label>
+                          <Input
+                            id="institution"
+                            value={project.institution}
+                            onChange={(e) => updateProject("institution", e.target.value)}
+                            placeholder="Enter institution name"
+                            className="bg-slate-700 border-slate-600 text-white"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="university" className="text-slate-300">University</Label>
+                          <Input
+                            id="university"
+                            value={project.university}
+                            onChange={(e) => updateProject("university", e.target.value)}
+                            placeholder="Enter university name"
+                            className="bg-slate-700 border-slate-600 text-white"
+                          />
+                        </div>
                       </div>
-                      <div>
-                        <Label htmlFor="timeframe" className="text-slate-300">Literature Timeframe (years)</Label>
-                        <Input
-                          id="timeframe"
-                          value={project.timeframe}
-                          onChange={(e) => updateProject("timeframe", e.target.value)}
-                          placeholder="5"
-                          className="bg-slate-700 border-slate-600 text-white"
-                        />
+                      <div className="grid grid-cols-2 gap-4 mt-4">
+                        <div>
+                          <Label htmlFor="location" className="text-slate-300">Location</Label>
+                          <Input
+                            id="location"
+                            value={project.location}
+                            onChange={(e) => updateProject("location", e.target.value)}
+                            placeholder="e.g., Mysuru – 570 006"
+                            className="bg-slate-700 border-slate-600 text-white"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="state" className="text-slate-300">State</Label>
+                          <Input
+                            id="state"
+                            value={project.state}
+                            onChange={(e) => updateProject("state", e.target.value)}
+                            placeholder="e.g., Karnataka, India"
+                            className="bg-slate-700 border-slate-600 text-white"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Supervision & Guidance Section */}
+                    <div className="bg-slate-700/30 p-6 rounded-lg border border-slate-600">
+                      <h3 className="text-xl font-semibold text-white mb-4 flex items-center">
+                        <Target className="w-5 h-5 mr-2" />
+                        Supervision & Guidance
+                      </h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="guide" className="text-slate-300">Guide</Label>
+                          <Input
+                            id="guide"
+                            value={project.guide}
+                            onChange={(e) => updateProject("guide", e.target.value)}
+                            placeholder="Enter guide name"
+                            className="bg-slate-700 border-slate-600 text-white"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="guidePosition" className="text-slate-300">Position</Label>
+                          <Input
+                            id="guidePosition"
+                            value={project.guidePosition}
+                            onChange={(e) => updateProject("guidePosition", e.target.value)}
+                            placeholder="e.g., Assistant Professor"
+                            className="bg-slate-700 border-slate-600 text-white"
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 gap-4 mt-4">
+                        <div>
+                          <Label htmlFor="guideDepartment" className="text-slate-300">Department</Label>
+                          <Input
+                            id="guideDepartment"
+                            value={project.department}
+                            onChange={(e) => updateProject("department", e.target.value)}
+                            placeholder="e.g., Computer Science and Engineering"
+                            className="bg-slate-700 border-slate-600 text-white"
+                            disabled
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Research Configuration Section */}
+                    <div className="bg-slate-700/30 p-6 rounded-lg border border-slate-600">
+                      <h3 className="text-xl font-semibold text-white mb-4 flex items-center">
+                        <BarChart3 className="w-5 h-5 mr-2" />
+                        Research Configuration
+                      </h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="background" className="text-slate-300">Academic Background</Label>
+                          <Input
+                            id="background"
+                            value={project.background}
+                            onChange={(e) => updateProject("background", e.target.value)}
+                            placeholder="Your academic/professional background"
+                            className="bg-slate-700 border-slate-600 text-white"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="expertise" className="text-slate-300">Area of Expertise</Label>
+                          <Input
+                            id="expertise"
+                            value={project.expertise}
+                            onChange={(e) => updateProject("expertise", e.target.value)}
+                            placeholder="Your area of expertise"
+                            className="bg-slate-700 border-slate-600 text-white"
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-4 mt-4">
+                        <div>
+                          <Label htmlFor="audience" className="text-slate-300">Target Audience</Label>
+                          <Input
+                            id="audience"
+                            value={project.targetAudience}
+                            onChange={(e) => updateProject("targetAudience", e.target.value)}
+                            placeholder="e.g., University Grant Committee, NSF"
+                            className="bg-slate-700 border-slate-600 text-white"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="timeframe" className="text-slate-300">Literature Timeframe (years)</Label>
+                          <Input
+                            id="timeframe"
+                            value={project.timeframe}
+                            onChange={(e) => updateProject("timeframe", e.target.value)}
+                            placeholder="5"
+                            className="bg-slate-700 border-slate-600 text-white"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
