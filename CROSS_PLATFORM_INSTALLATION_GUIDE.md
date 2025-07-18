@@ -622,7 +622,7 @@ source ~/.bashrc
 #### Configuring the API Key
 ```env
 # In your .env file
-OPENAI_API_KEY=sk-your-actual-api-key-here
+OPENAI_API_KEY=sk-REPLACE_WITH_YOUR_ACTUAL_API_KEY
 ```
 
 **Security Best Practices:**
