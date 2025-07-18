@@ -27,8 +27,10 @@ import {
   CheckCircle2,
   Clock,
   XCircle,
-  Minus
+  Minus,
+  Database
 } from "lucide-react";
+import { Link } from "wouter";
 
 interface Evidence {
   id: string;
@@ -210,6 +212,12 @@ export default function ToolsLayout() {
               <span>Export Report</span>
             </Button>
             <Separator orientation="vertical" className="h-6" />
+            <Link href="/database">
+              <Button size="sm" variant="outline" className="flex items-center space-x-1">
+                <Database className="w-4 h-4" />
+                <span>Database Console</span>
+              </Button>
+            </Link>
             <Button size="sm" variant="ghost">
               <Settings className="w-4 h-4" />
             </Button>

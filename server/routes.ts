@@ -6,6 +6,7 @@ import { aiAnalysisService } from "./services/aiAnalysis";
 import { automatedAnalysis } from "./services/automatedAnalysis";
 import { reportGenerator } from "./services/reportGeneration";
 import { threatIntelligenceService } from "./services/threatIntelligence";
+import { databaseManager } from "./services/databaseManager";
 import { insertCaseSchema, insertEvidenceSchema, insertNotificationSchema } from "@shared/schema";
 import multer from "multer";
 
@@ -471,6 +472,115 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(status);
     } catch (error) {
       res.status(500).json({ error: error instanceof Error ? error.message : "Status check failed" });
+    }
+  });
+
+  // Database Management endpoints
+  app.get("/api/database/stats", async (req, res) => {
+    try {
+      const stats = await databaseManager.getDatabaseStats();
+      res.json(stats);
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to get database stats" });
+    }
+  });
+
+  app.post("/api/database/query", async (req, res) => {
+    try {
+      const { query } = req.body;
+      
+      if (!query || typeof query !== 'string') {
+        return res.status(400).json({ error: "Query string is required" });
+      }
+
+      const result = await databaseManager.executeQuery(query);
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : "Query execution failed" });
+    }
+  });
+
+  app.post("/api/database/backup", async (req, res) => {
+    try {
+      const { type = 'full' } = req.body;
+      
+      if (!['full', 'schema', 'data'].includes(type)) {
+        return res.status(400).json({ error: "Invalid backup type. Must be 'full', 'schema', or 'data'" });
+      }
+
+      const backup = await databaseManager.createBackup(type);
+      
+      // Broadcast backup completion
+      broadcast({
+        type: 'backup_created',
+        data: backup
+      });
+
+      res.json(backup);
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : "Backup creation failed" });
+    }
+  });
+
+  app.get("/api/database/backups", async (req, res) => {
+    try {
+      const backups = await databaseManager.listBackups();
+      res.json(backups);
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : "Failed to list backups" });
+    }
+  });
+
+  app.post("/api/database/restore", async (req, res) => {
+    try {
+      const { backupId } = req.body;
+      
+      if (!backupId) {
+        return res.status(400).json({ error: "Backup ID is required" });
+      }
+
+      await databaseManager.restoreBackup(backupId);
+      
+      // Broadcast restore completion
+      broadcast({
+        type: 'backup_restored',
+        data: { backupId }
+      });
+
+      res.json({ success: true, message: "Backup restored successfully" });
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : "Backup restoration failed" });
+    }
+  });
+
+  app.delete("/api/database/backup", async (req, res) => {
+    try {
+      const { backupId } = req.body;
+      
+      if (!backupId) {
+        return res.status(400).json({ error: "Backup ID is required" });
+      }
+
+      await databaseManager.deleteBackup(backupId);
+      res.json({ success: true, message: "Backup deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : "Backup deletion failed" });
+    }
+  });
+
+  app.post("/api/database/optimize", async (req, res) => {
+    try {
+      const result = await databaseManager.optimizeDatabase();
+      
+      // Broadcast optimization completion
+      broadcast({
+        type: 'database_optimized',
+        data: result
+      });
+
+      res.json(result);
+    } catch (error) {
+      res.status(500).json({ error: error instanceof Error ? error.message : "Database optimization failed" });
     }
   });
 

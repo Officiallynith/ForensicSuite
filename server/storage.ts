@@ -65,7 +65,6 @@ export class DatabaseStorage implements IStorage {
         username: "forensic_analyst",
         password: "hashed_password",
         name: "Dr. Sarah Chen",
-        email: "analyst@daff.security",
         role: "Senior Forensic Analyst",
       }).returning();
 
@@ -102,7 +101,6 @@ export class DatabaseStorage implements IStorage {
       await db.insert(aiAnalysisJobs).values({
         jobType: "deepfake",
         status: "running",
-        evidenceId: 1,
         progress: 45,
       });
 

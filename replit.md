@@ -152,6 +152,18 @@ Key entities include:
 - **Error Handling**: Implemented comprehensive uncaught exception and unhandled rejection handlers
 - **Timeout Management**: Added 30-second timeout for graceful shutdown to prevent hanging processes
 
+**Embedded Database Management System (Jan 2025)**: Integrated comprehensive PostgreSQL database management directly into DAFF application:
+- **Database Console Interface**: Professional PostgreSQL management console with real-time statistics, query execution, and backup management
+- **Native Database Manager**: Local DatabaseManager service with table statistics, connection monitoring, and performance optimization
+- **Query Console**: SQL query execution interface with syntax validation, result visualization, and execution time tracking
+- **Backup & Restore System**: Full, schema-only, and data-only backup creation with automated scheduling and restoration capabilities
+- **Real-time Monitoring**: Live database statistics including table sizes, row counts, connection usage, and system uptime
+- **Security Controls**: Production-safe query validation, dangerous operation prevention, and role-based access controls
+- **Local Storage Integration**: Complete offline operation with local backup storage and integrity verification
+- **Performance Tools**: Database optimization utilities, VACUUM ANALYZE automation, and index usage analysis
+- **Tools Interface Integration**: Database Console accessible directly from forensic tools interface with single-click navigation
+- **WebSocket Integration**: Real-time notifications for backup completion, optimization status, and system health updates
+
 ## Data Flow
 
 1. **Evidence Upload**: Files uploaded through REST API with metadata extraction
