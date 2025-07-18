@@ -15,6 +15,7 @@ import NetworkStorageAutomation from "@/pages/NetworkStorageAutomation";
 import DAFFvsDFFComparison from "@/pages/DAFFvsDFFComparison";
 import DefenderSystem from "@/pages/DefenderSystem";
 import DatabaseConsole from "@/pages/DatabaseConsole";
+import ResearchJustification from "@/pages/ResearchJustification";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -46,6 +47,7 @@ function Router() {
       <Route path="/daff-vs-dff" component={DAFFvsDFFComparison} />
       <Route path="/defender" component={DefenderSystem} />
       <Route path="/database" component={DatabaseConsole} />
+      <Route path="/research-justification" component={ResearchJustification} />
       {/* Fallback to 404 */}
       <Route component={NotFound} />
     </Switch>

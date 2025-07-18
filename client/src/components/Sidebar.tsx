@@ -93,6 +93,11 @@ export function Sidebar({ activeCases, threatCount }: SidebarProps) {
       icon: "fas fa-file-alt",
       label: "Generate Report",
     },
+    {
+      href: "/research-justification",
+      icon: "fas fa-graduation-cap",
+      label: "Research Justification",
+    },
   ];
 
   return (
