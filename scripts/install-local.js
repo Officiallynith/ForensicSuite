@@ -64,7 +64,7 @@ class DAFFLocalInstaller {
     
     // Check Node.js
     try {
-      const nodeVersion = await this.execCommand('node --version');
+      const nodeVersion = await this.execCommand('node', ['--version']);
       const majorVersion = parseInt(nodeVersion.replace('v', '').split('.')[0]);
       if (majorVersion < 18) {
         throw new Error('Node.js 18 or newer is required');
@@ -76,7 +76,7 @@ class DAFFLocalInstaller {
 
     // Check PostgreSQL
     try {
-      const pgVersion = await this.execCommand('pg_config --version');
+      const pgVersion = await this.execCommand('pg_config', ['--version']);
       console.log('✓ PostgreSQL:', pgVersion.trim());
     } catch (error) {
       throw new Error('PostgreSQL is not installed or not in PATH');
@@ -84,7 +84,7 @@ class DAFFLocalInstaller {
 
     // Check npm
     try {
-      const npmVersion = await this.execCommand('npm --version');
+      const npmVersion = await this.execCommand('npm', ['--version']);
       console.log('✓ npm:', npmVersion.trim());
     } catch (error) {
       throw new Error('npm is not available');
@@ -144,8 +144,8 @@ class DAFFLocalInstaller {
     // Set permissions on Unix-like systems
     if (process.platform !== 'win32') {
       try {
-        await this.execCommand(`chmod 750 ${this.config.storagePath}`);
-        await this.execCommand(`chmod -R 750 ${this.config.storagePath}/*`);
+        await this.execCommand('chmod', ['750', this.config.storagePath]);
+        await this.execCommand('chmod', ['-R', '750', this.config.storagePath + '/*']);
         console.log('✓ Set secure permissions');
       } catch (error) {
         console.log('⚠ Warning: Could not set permissions');
@@ -167,7 +167,7 @@ class DAFFLocalInstaller {
 
     for (const command of dbCommands) {
       try {
-        await this.execCommand(`psql -U postgres -c "${command}"`);
+        await this.execCommand('psql', ['-U', 'postgres', '-c', command]);
         console.log('✓ Executed:', command.split(' ').slice(0, 3).join(' '));
       } catch (error) {
         // Some commands might fail if already exists, that's okay
@@ -177,9 +177,8 @@ class DAFFLocalInstaller {
 
     // Test connection
     try {
-      const testCommand = `psql -h localhost -U ${this.config.dbUser} -d ${this.config.dbName} -c "SELECT 1;"`;
       process.env.PGPASSWORD = this.config.dbPassword;
-      await this.execCommand(testCommand);
+      await this.execCommand('psql', ['-h', 'localhost', '-U', this.config.dbUser, '-d', this.config.dbName, '-c', 'SELECT 1;']);
       console.log('✓ Database connection verified');
     } catch (error) {
       throw new Error('Database connection failed. Please check credentials and try again.');
@@ -234,7 +233,7 @@ DISABLE_EXTERNAL_APIS=true
     console.log('This may take a few minutes...');
     
     try {
-      await this.execCommand('npm install', { showOutput: true });
+      await this.execCommand('npm', ['install'], { showOutput: true });
       console.log('✓ Dependencies installed successfully');
     } catch (error) {
       throw new Error('Failed to install dependencies: ' + error.message);
@@ -247,7 +246,7 @@ DISABLE_EXTERNAL_APIS=true
     console.log('🏗️  Building application...');
     
     try {
-      await this.execCommand('npm run build', { showOutput: true });
+      await this.execCommand('npm', ['run', 'build'], { showOutput: true });
       console.log('✓ Application built successfully');
     } catch (error) {
       throw new Error('Failed to build application: ' + error.message);
@@ -264,7 +263,7 @@ DISABLE_EXTERNAL_APIS=true
       require('dotenv').config({ path: '.env.local' });
       
       // Run database migrations
-      await this.execCommand('npm run db:push');
+      await this.execCommand('npm', ['run', 'db:push']);
       console.log('✓ Database schema initialized');
       
       // Create initial admin user (optional)
@@ -328,20 +327,39 @@ DISABLE_EXTERNAL_APIS=true
     });
   }
 
-  async execCommand(command, options = {}) {
+  async execCommand(command, args = [], options = {}) {
     return new Promise((resolve, reject) => {
-      const child = exec(command, (error, stdout, stderr) => {
-        if (error) {
-          reject(error);
+      // Use spawn instead of exec for better security with argument separation
+      const child = spawn(command, args, { shell: false });
+      
+      let stdout = '';
+      let stderr = '';
+      
+      child.stdout.on('data', (data) => {
+        stdout += data;
+        if (options.showOutput) {
+          process.stdout.write(data);
+        }
+      });
+      
+      child.stderr.on('data', (data) => {
+        stderr += data;
+        if (options.showOutput) {
+          process.stderr.write(data);
+        }
+      });
+      
+      child.on('close', (code) => {
+        if (code !== 0) {
+          reject(new Error(`Command failed with code ${code}: ${stderr}`));
         } else {
           resolve(stdout);
         }
       });
-
-      if (options.showOutput) {
-        child.stdout.pipe(process.stdout);
-        child.stderr.pipe(process.stderr);
-      }
+      
+      child.on('error', (error) => {
+        reject(error);
+      });
     });
   }
 }
